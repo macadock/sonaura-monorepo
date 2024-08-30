@@ -10,4 +10,4 @@ permissions:
 jobs:
   check-infra:
     name: Check infra
-    uses: ./.github/workflows/check-infra.yml
+    uses: ./.github/actions/check-infra

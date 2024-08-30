@@ -7,14 +7,14 @@ on:
 jobs:
   check-infra:
     name: Check infra
-    uses: ./.github/workflows/check-infra.yml
+    uses: ./.github/actions/check-infra
 
   deploy-infra:
     name: Deploy infra
     needs: check-infra
-    uses: ./.github/workflows/deploy-infra.yml
+    uses: ./.github/actions/deploy-infra
 
   deploy-app:
     name: Deploy app
     needs: deploy-infra
-    uses: ./.github/workflows/deploy-app.yml
+    uses: ./.github/actions/deploy-app
