@@ -7,6 +7,9 @@ inputs:
   CLOUDFLARE_ACCOUNT_ID:
     description: 'The Cloudflare account ID'
     required: true
+  API_ENV:
+    description: 'The api environment to deploy to'
+    required: true
 
 runs:
   using: "composite"
@@ -17,5 +20,5 @@ runs:
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
-        command: deploy --env production
+        command: deploy --env ${{ inputs.API_ENV }}
         workingDirectory: "./apps/api"

@@ -40,4 +40,4 @@ dist/
 
 # Terraform
 *.tfstate
-packages/infra/.terraform
+packages/infra/**/.terraform

@@ -2,7 +2,7 @@ terraform {
   cloud {
     organization = "Sonaura"
     workspaces {
-      name = "production"
+      name = "staging"
     }
   }
   required_providers {
@@ -26,50 +26,50 @@ variable "account_id" {
 }
 
 variable "domain" {
-  default = "sonaura.fr"
+  default = "staging.sonaura.fr"
 }
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
-resource "cloudflare_r2_bucket" "sonaura-r2-marketing-bucket" {
-  name       = "marketing"
+resource "cloudflare_r2_bucket" "sonaura-r2-marketing-bucket-staging" {
+  name       = "marketing-staging"
   account_id = var.account_id
 }
 
-resource "cloudflare_workers_script" "sonaura-worker" {
+resource "cloudflare_workers_script" "sonaura-worker-staging" {
   account_id         = var.account_id
   content            = file("worker.js")
-  name               = "api"
+  name               = "api-staging"
   compatibility_date = "2024-08-21"
 }
 
-resource "cloudflare_workers_domain" "sonaura-worker-domain" {
-  account_id = var.account_id
-  hostname   = "api.${var.domain}"
-  service    = cloudflare_workers_script.sonaura-worker.name
-  zone_id    = var.zone_id
+resource "cloudflare_workers_domain" "sonaura-worker-domain-staging" {
+  account_id  = var.account_id
+  hostname    = "api.${var.domain}"
+  service     = cloudflare_workers_script.sonaura-worker-staging.name
+  zone_id     = var.zone_id
 }
 
-resource "cloudflare_pages_project" "sonaura-marketing-pages" {
+resource "cloudflare_pages_project" "sonaura-marketing-pages-staging" {
   account_id        = var.account_id
-  name              = "marketing"
+  name              = "marketing-staging"
   production_branch = "main"
   deployment_configs {
-    production {
+    preview {
       compatibility_date  = "2024-08-21"
       compatibility_flags = ["nodejs_compat"]
       service_binding {
         name    = "api"
-        service = cloudflare_workers_script.sonaura-worker.name
+        service = cloudflare_workers_script.sonaura-worker-staging.name
       }
     }
   }
 }
 
-resource "cloudflare_pages_domain" "sonaura-marketing-pages_domain" {
+resource "cloudflare_pages_domain" "sonaura-marketing-pages_domain-staging" {
   account_id   = var.account_id
-  domain       = "dev.${var.domain}"
-  project_name = cloudflare_pages_project.sonaura-marketing-pages.name
+  domain       = var.domain
+  project_name = cloudflare_pages_project.sonaura-marketing-pages-staging.name
 }
