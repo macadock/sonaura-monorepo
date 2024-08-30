@@ -11,7 +11,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-jobs:
+runs:
+  using: "composite"
   deploy-infra:
     name: Deploy infra
     runs-on: ubuntu-latest
