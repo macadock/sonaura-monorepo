@@ -52,8 +52,8 @@ resource "cloudflare_workers_domain" "example" {
 }
 
 resource "cloudflare_pages_project" "sonaura-marketing-pages" {
-  account_id = var.account_id
-  name       = "marketing"
+  account_id        = var.account_id
+  name              = "marketing"
   production_branch = "main"
 }
 
