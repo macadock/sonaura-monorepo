@@ -45,7 +45,7 @@ resource "cloudflare_workers_script" "sonaura-worker" {
   compatibility_date = "2024-08-21"
 }
 
-resource "cloudflare_workers_domain" "example" {
+resource "cloudflare_workers_domain" "sonaura-worker-domain" {
   account_id = var.account_id
   hostname   = "api.${var.domain}"
   service    = cloudflare_workers_script.sonaura-worker.name
