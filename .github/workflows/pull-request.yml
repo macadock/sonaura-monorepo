@@ -17,4 +17,4 @@ jobs:
         uses: .github/actions/check-infra
         with:
           TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-          INFRA_DIR: ./packages/infra
+          INFRA_DIR: packages/infra
