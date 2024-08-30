@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Run Check Infra Action
         uses: ./.github/actions/check-infra
         with:
@@ -23,6 +26,9 @@ jobs:
     needs: check-infra
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Run Check Infra Action
         uses: ./.github/actions/deploy-infra
         with:
@@ -35,6 +41,9 @@ jobs:
     needs: deploy-infra
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Run Deploy App Action
         uses: ./.github/actions/deploy-app
         with:
