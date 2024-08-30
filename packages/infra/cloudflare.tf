@@ -50,3 +50,15 @@ resource "cloudflare_workers_domain" "example" {
   service    = cloudflare_workers_script.sonaura-worker.name
   zone_id    = var.zone_id
 }
+
+resource "cloudflare_pages_project" "sonaura-marketing-pages" {
+  account_id = var.account_id
+  name       = "marketing"
+  production_branch = "main"
+}
+
+resource "cloudflare_pages_domain" "sonaura-marketing-pages_domain" {
+  account_id   = var.account_id
+  domain       = "dev.${var.domain}"
+  project_name = cloudflare_pages_project.sonaura-marketing-pages.name
+}
