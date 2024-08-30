@@ -14,4 +14,4 @@ runs:
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         command: deploy --env production
-        workingDirectory: "./packages/api"
+        workingDirectory: "./apps/api"
