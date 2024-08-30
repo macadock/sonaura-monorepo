@@ -2,7 +2,7 @@ terraform {
   cloud {
     organization = "Sonaura"
     workspaces {
-      name = "infra"
+      name = "production"
     }
   }
   required_providers {
