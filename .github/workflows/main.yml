@@ -16,7 +16,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  terraform:
+  update-infra:
+    name: Update infra
     runs-on: ubuntu-latest
 
     steps:
