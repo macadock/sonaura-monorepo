@@ -11,6 +11,10 @@ env:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
@@ -25,28 +29,23 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           cli_config_credentials_token: ${{ env.TF_API_TOKEN }}
-        needs: checkout
 
       - name: Terraform Init
         id: terraform-init
         working-directory: ${{ env.INFRA_DIR }}
         run: terraform init
-        needs: setup-terraform
 
       - name: Terraform Format
         id: terraform-format
         working-directory: ${{ env.INFRA_DIR }}
         run: terraform fmt -check
-        needs: terraform-init
 
       - name: Terraform Plan
         id: terraform-plan
         working-directory: ${{ env.INFRA_DIR }}
         run: terraform plan -input=false
-        needs: terraform-format
 
       - name: Terraform Apply
         id: terraform-apply
         working-directory: ${{ env.INFRA_DIR }}
         run: terraform apply -auto-approve -input=false
-        needs: terraform-plan
