@@ -9,7 +9,12 @@ permissions:
 jobs:
   check-infra:
     name: Check infra
-    uses: ./.github/actions/check-infra
-    with:
-      TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-      INFRA_DIR: ./packages/infra
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Check Infra Action
+        uses: ./.github/actions/check-infra
+        with:
+          TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+          INFRA_DIR: ./packages/infra
+
