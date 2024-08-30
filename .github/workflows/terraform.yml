@@ -22,6 +22,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Check directory
+      run: ls -l
+
     # Change directory to /packages/infra
     - name: Change directory
       run: cd ./packages/infra
