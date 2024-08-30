@@ -22,12 +22,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Check directory
-      run: ls -l
+
 
     # Change directory to /packages/infra
     - name: Change directory
       run: cd ./packages/infra
+
+    - name: Check directory
+      run: ls -l>
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
