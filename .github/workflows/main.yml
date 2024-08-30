@@ -3,11 +3,11 @@ name: 'Update infra'
 on:
   push:
     branches: [ "main" ]
-
+    
 permissions:
   contents: read
 
 jobs:
   check-infra:
     name: Check infra
-    uses: ./.github/actions/check-infra
+    uses: ./.github/actions/check-infra@${{github.ref}}
