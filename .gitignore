@@ -37,3 +37,7 @@ dist/
 
 # IDE
 .idea/
+
+# Terraform
+*.tfstate
+packages/infra/.terraform
