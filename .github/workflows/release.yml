@@ -1,0 +1,20 @@
+name: 'Release'
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  check-infra:
+    name: Check infra
+    uses: ./.github/workflows/check-infra.yml
+
+  deploy-infra:
+    name: Deploy infra
+    needs: check-infra
+    uses: ./.github/workflows/deploy-infra.yml
+
+  deploy-app:
+    name: Deploy app
+    needs: deploy-infra
+    uses: ./.github/workflows/deploy-app.yml
