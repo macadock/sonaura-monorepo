@@ -14,8 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: ls -la
-
       - name: Run Check Infra Action
         uses: ./.github/actions/check-infra
         with:
