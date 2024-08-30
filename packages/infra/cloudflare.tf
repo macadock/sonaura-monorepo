@@ -38,7 +38,7 @@ resource "cloudflare_r2_bucket" "sonaura-r2-marketing-bucket" {
   account_id = var.account_id
 }
 
-resource "cloudflare_worker_script" "sonaura-worker" {
+resource "cloudflare_workers_script" "sonaura-worker" {
   account_id = var.account_id
   content    = file("worker.js")
   name       = "api"
