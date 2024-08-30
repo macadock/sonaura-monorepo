@@ -24,10 +24,12 @@ runs:
 
     - name: Terraform Init
       id: terraform-init
+      shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
       run: terraform init
 
     - name: Terraform Apply
       id: terraform-apply
+      shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
       run: terraform apply -auto-approve -input=false
