@@ -42,6 +42,7 @@ resource "cloudflare_workers_script" "sonaura-worker" {
   account_id = var.account_id
   content    = file("worker.js")
   name       = "api"
+  compatibility_date = "2024-08-21"
 }
 
 resource "cloudflare_workers_domain" "example" {
@@ -57,6 +58,8 @@ resource "cloudflare_pages_project" "sonaura-marketing-pages" {
   production_branch = "main"
   deployment_configs {
     production {
+      compatibility_date = "2024-08-21"
+      compatibility_flags = ["nodejs_compat"]
       service_binding {
         name    = "api"
         service = cloudflare_workers_script.sonaura-worker.name
