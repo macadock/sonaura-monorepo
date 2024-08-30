@@ -55,6 +55,14 @@ resource "cloudflare_pages_project" "sonaura-marketing-pages" {
   account_id        = var.account_id
   name              = "marketing"
   production_branch = "main"
+  deployment_configs {
+    production {
+      service_binding {
+        name    = "api"
+        service = cloudflare_workers_script.sonaura-worker.name
+      }
+    }
+  }
 }
 
 resource "cloudflare_pages_domain" "sonaura-marketing-pages_domain" {
