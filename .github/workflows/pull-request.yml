@@ -12,9 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Run Check Infra Action
         uses: ./.github/actions/check-infra
         with:
           TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
           INFRA_DIR: ./packages/infra
-
