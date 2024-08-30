@@ -2,11 +2,11 @@ name: 'Check infra'
 
 on:
   pull_request:
-    
+
 permissions:
   contents: read
 
 jobs:
   check-infra:
     name: Check infra
-    uses: ./.github/workflows/check-infra.yml
+    uses: ./.github/actions/check-infra
