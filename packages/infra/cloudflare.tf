@@ -45,7 +45,7 @@ resource "cloudflare_workers_script" "sonaura-worker" {
 }
 
 resource "cloudflare_workers_route" "sonaura-worker-route" {
-  pattern     = "api." + var.domain + "/*"
+  pattern     = "api.${var.domain}/*"
   script_name = cloudflare_workers_script.sonaura-worker.name
   zone_id     = var.zone_id
 }
