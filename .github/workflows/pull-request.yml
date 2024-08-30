@@ -1,8 +1,7 @@
 name: 'Check infra'
 
 on:
-  push:
-    pull_request:
+  pull_request:
 
 env:
   TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
@@ -16,8 +15,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  update-infra:
-    name: Update infra
+  check-infra:
+    name: Check infra
     runs-on: ubuntu-latest
 
     steps:
