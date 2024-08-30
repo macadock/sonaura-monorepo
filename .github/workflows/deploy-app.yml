@@ -10,7 +10,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-jobs:
+runs:
+  using: "composite"
   deploy-api:
     runs-on: ubuntu-latest
     name: Deploy api

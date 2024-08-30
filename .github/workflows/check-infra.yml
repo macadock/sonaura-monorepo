@@ -11,7 +11,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-jobs:
+runs:
+  using: "composite"
   check-infra:
     name: Check infra
     runs-on: ubuntu-latest
