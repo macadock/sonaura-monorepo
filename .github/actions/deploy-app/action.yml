@@ -4,6 +4,9 @@ inputs:
   CLOUDFLARE_API_TOKEN:
     description: 'The Cloudflare API token'
     required: true
+  CLOUDFLARE_ACCOUNT_ID:
+    description: 'The Cloudflare account ID'
+    required: true
 
 runs:
   using: "composite"
@@ -13,5 +16,6 @@ runs:
       uses: cloudflare/wrangler-action@v3
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
         command: deploy --env production
         workingDirectory: "./apps/api"
