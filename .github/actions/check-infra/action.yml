@@ -7,7 +7,7 @@ inputs:
   INFRA_DIR:
     description: 'The directory where Terraform configurations are located'
     required: true
-    default: 'packages/infra'
+    default: './packages/infra'
 
 runs:
   using: "composite"
@@ -25,14 +25,17 @@ runs:
     - name: Terraform Init
       id: terraform-init
       run: terraform init
+      shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Format
       id: terraform-format
       run: terraform fmt -check
+      shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Plan
       id: terraform-plan
       run: terraform plan -input=false
+      shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
