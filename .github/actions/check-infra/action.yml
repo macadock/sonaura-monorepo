@@ -1,15 +1,13 @@
 name: 'Check infra'
 
-env:
-  TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-  INFRA_DIR: ./packages/infra
-
-permissions:
-  contents: read
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+inputs:
+  TF_API_TOKEN:
+    description: 'The Terraform API token'
+    required: true
+  INFRA_DIR:
+    description: 'The directory where Terraform configurations are located'
+    required: true
+    default: './packages/infra'
 
 runs:
   using: "composite"
@@ -22,19 +20,19 @@ runs:
       id: setup-terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        cli_config_credentials_token: ${{ env.TF_API_TOKEN }}
+        cli_config_credentials_token: ${{ inputs.TF_API_TOKEN }}
 
     - name: Terraform Init
       id: terraform-init
-      working-directory: ${{ env.INFRA_DIR }}
       run: terraform init
+      working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Format
       id: terraform-format
-      working-directory: ${{ env.INFRA_DIR }}
       run: terraform fmt -check
+      working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Plan
       id: terraform-plan
-      working-directory: ${{ env.INFRA_DIR }}
       run: terraform plan -input=false
+      working-directory: ${{ inputs.INFRA_DIR }}
