@@ -46,10 +46,10 @@ resource "cloudflare_workers_script" "sonaura-worker-staging" {
 }
 
 resource "cloudflare_workers_domain" "sonaura-worker-domain-staging" {
-  account_id  = var.account_id
-  hostname    = "api.${var.domain}"
-  service     = cloudflare_workers_script.sonaura-worker-staging.name
-  zone_id     = var.zone_id
+  account_id = var.account_id
+  hostname   = "api.${var.domain}"
+  service    = cloudflare_workers_script.sonaura-worker-staging.name
+  zone_id    = var.zone_id
 }
 
 resource "cloudflare_pages_project" "sonaura-marketing-pages-staging" {
