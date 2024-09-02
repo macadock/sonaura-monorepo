@@ -22,3 +22,11 @@ runs:
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
         command: deploy --env ${{ inputs.API_ENV }}
         workingDirectory: "./apps/api"
+
+    - name: Deploy marketing
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
+        command: deploy --env ${{ inputs.API_ENV }}
+        workingDirectory: "./apps/marketing"
