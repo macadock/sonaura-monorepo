@@ -18,9 +18,11 @@ runs:
 
     - name: Install dependencies
       run: npm install
+      shell: bash
 
     - name: Build apps
       run: npm run build
+      shell: bash
 
     - name: Deploy api
       uses: cloudflare/wrangler-action@v3
