@@ -10,10 +10,9 @@ permissions:
 jobs:
   deploy-infra:
     env:
-      BRANCH_NAME: ${{ github.head_ref }}
-      WORKSPACE_NAME: ${{ env.BRANCH_NAME }}
-      API_URL: ${{ env.BRANCH_NAME}}-${{ vars.API_URL }}
-      WEBSITE_URL: ${{ env.BRANCH_NAME}}-${{ vars.WEBSITE_URL }}
+      WORKSPACE_NAME: ${{ github.head_ref }}
+      API_URL: ${{ github.head_ref}}-${{ vars.API_URL }}
+      WEBSITE_URL: ${{ github.head_ref}}-${{ vars.WEBSITE_URL }}
       ENVIRONMENT: ${{ vars.ENVIRONMENT }}
       CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
