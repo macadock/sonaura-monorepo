@@ -13,15 +13,33 @@ inputs:
   ENVIRONMENT:
     description: 'The environment'
     required: true
+  CLOUDFLARE_API_TOKEN:
+    description: 'The Cloudflare API token'
+    required: true
+  CLOUDFLARE_ZONE_ID:
+    description: 'The Cloudflare zone ID'
+    required: true
+  CLOUDFLARE_ACCOUNT_ID:
+    description: 'The Cloudflare account ID'
+    required: true
+  AWS_ACCESS_KEY_ID:
+    description: 'The AWS access key ID'
+    required: true
+  AWS_SECRET_ACCESS_KEY:
+    description: 'The AWS secret access key'
+    required: true
+  AWS_ENDPOINT_URL_S3:
+    description: 'The AWS endpoint URL for S3'
+    required: true
 
 env:
   INFRA_DIR: './packages/infra'
-  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-  CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+  CLOUDFLARE_API_TOKEN: ${{ inputs.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ZONE_ID: ${{ inputs.CLOUDFLARE_ZONE_ID }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+  AWS_ENDPOINT_URL_S3: ${{ inputs.AWS_ENDPOINT_URL_S3 }}
   API_URL: ${{ inputs.API_URL }}
   WEBSITE_URL: ${{ inputs.WEBSITE_URL }}
   ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
