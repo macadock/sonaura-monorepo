@@ -1,12 +1,5 @@
 name: 'Deploy preview environment'
 
-on:
-  pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
-
 env:
   BRANCH_NAME: ${{ github.head_ref }}
   WORKSPACE_NAME: ${{ env.BRANCH_NAME }}
@@ -19,6 +12,14 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
 
 jobs:
   deploy-infra:
