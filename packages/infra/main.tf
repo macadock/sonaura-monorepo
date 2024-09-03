@@ -33,29 +33,24 @@ provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
-resource "cloudflare_workers_script" "sonaura-worker" {
+resource "cloudflare_workers_script" "sonaura-worker-staging" {
+  account_id         = var.account_id
+  content            = file("worker.js")
+  name               = "api-staging"
+  compatibility_date = "2024-08-21"
+}
+
+resource "cloudflare_workers_script" "sonaura-worker-production" {
   account_id         = var.account_id
   content            = file("worker.js")
   name               = "api"
   compatibility_date = "2024-08-21"
-
-  service_binding {
-    name        = ""
-    service     = ""
-    environment = "production"
-  }
-
-  service_binding {
-    name        = ""
-    service     = ""
-    environment = "staging"
-  }
 }
 
 resource "cloudflare_workers_domain" "sonaura-worker-domain-production" {
   account_id  = var.account_id
   hostname    = "api.${var.domain}"
-  service     = cloudflare_workers_script.sonaura-worker.name
+  service     = cloudflare_workers_script.sonaura-worker-production.name
   zone_id     = var.zone_id
   environment = "production"
 }
@@ -63,7 +58,7 @@ resource "cloudflare_workers_domain" "sonaura-worker-domain-production" {
 resource "cloudflare_workers_domain" "sonaura-worker-domain-staging" {
   account_id  = var.account_id
   hostname    = "api-staging.${var.domain}"
-  service     = cloudflare_workers_script.sonaura-worker.name
+  service     = cloudflare_workers_script.sonaura-worker-staging.name
   zone_id     = var.zone_id
   environment = "staging"
 }
@@ -95,7 +90,7 @@ resource "cloudflare_pages_project" "sonaura-marketing-pages" {
 
       service_binding {
         name        = "api"
-        service     = cloudflare_workers_script.sonaura-worker.name
+        service     = cloudflare_workers_script.sonaura-worker-production.name
         environment = "production"
       }
 
@@ -111,7 +106,7 @@ resource "cloudflare_pages_project" "sonaura-marketing-pages" {
 
       service_binding {
         name        = "api"
-        service     = cloudflare_workers_script.sonaura-worker.name
+        service     = cloudflare_workers_script.sonaura-worker-staging.name
         environment = "staging"
       }
 
