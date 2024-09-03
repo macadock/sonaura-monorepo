@@ -84,7 +84,7 @@ resource "cloudflare_pages_project" "marketing-pages" {
 
       environment_variables = {
         ENVIRONMENT  = var.ENVIRONMENT
-        NEXT_API_URL = var.API_URL
+        NEXT_PUBLIC_API_URL = var.API_URL
       }
     }
   }
