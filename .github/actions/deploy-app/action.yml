@@ -23,8 +23,8 @@ runs:
       run: npm install
       shell: bash
 
-    - name: Build apps
-      run: npm run build
+    - name: Build frontend
+      run: npm run build:ci
       shell: bash
 
     - name: Deploy marketing
@@ -32,10 +32,10 @@ runs:
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
-        command: pages deploy ./.next/static --project-name marketing-${{ inputs.BRANCH_NAME }}
+        command: pages deploy ./.vercel/output/static --project-name marketing-${{ inputs.BRANCH_NAME }}
         workingDirectory: "./apps/marketing"
 
-    - name: Deploy api
+    - name: Build and deploy api
       uses: cloudflare/wrangler-action@v3
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
