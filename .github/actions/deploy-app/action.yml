@@ -16,18 +16,10 @@ runs:
   steps:
     - uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: npm install
-      shell: bash
-
-    - name: Build apps
-      run: npm run build
-      shell: bash
-
     - name: Deploy api
       uses: cloudflare/wrangler-action@v3
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
-        command: deploy --env ${{ inputs.API_ENV }}
+        command: deploy --env ${{ inputs.ENVIRONMENT }}
         workingDirectory: "./apps/api"
