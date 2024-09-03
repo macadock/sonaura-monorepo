@@ -11,10 +11,10 @@ jobs:
   deploy-infra:
     environment: preview
     env:
-      BRANCH_NAME: ${{ github.head_ref }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+      TF_VAR_BRANCH_NAME: ${{ github.head_ref }}
       TF_VAR_API_URL: ${{ github.head_ref}}-${{ vars.API_URL }}
       TF_VAR_WEBSITE_URL: ${{ github.head_ref}}-${{ vars.WEBSITE_URL }}
       TF_VAR_ENVIRONMENT: ${{ vars.ENVIRONMENT }}
@@ -33,4 +33,4 @@ jobs:
         uses: ./.github/actions/infra
         with:
           INFRA_DIR: './packages/infra'
-          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          BRANCH_NAME: ${{ env.TF_VAR_BRANCH_NAME }}
