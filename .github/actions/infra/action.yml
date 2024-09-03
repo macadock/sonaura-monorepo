@@ -43,16 +43,11 @@ env:
   API_URL: ${{ inputs.API_URL }}
   WEBSITE_URL: ${{ inputs.WEBSITE_URL }}
   ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
-  WORKSPACE_NAME: ${{ inputs.ref_name }}
+  WORKSPACE_NAME: ${{ inputs.WORKSPACE_NAME }}
 
 runs:
   using: "composite"
   steps:
-    - name: Check if input is missing
-      if: ${{ env.ENVIRONMENT == '' }}
-      run: |
-        echo "::error::Missing required input: my_input"
-        exit 1
     - name: Checkout
       id: checkout
       uses: actions/checkout@v4
