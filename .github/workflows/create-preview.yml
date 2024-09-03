@@ -29,7 +29,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy preview infra
+      - name: Deploy
         uses: ./.github/actions/infra
         with:
           INFRA_DIR: './packages/infra'
