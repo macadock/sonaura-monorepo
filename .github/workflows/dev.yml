@@ -1,0 +1,17 @@
+name: 'Check env'
+
+on:
+  push:
+    branches: [ "dev" ]
+
+permissions:
+  contents: read
+
+jobs:
+  check-env:
+    name: Check env
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "${{ vars.ENVIRONMENT }}"
+        shell: bash
