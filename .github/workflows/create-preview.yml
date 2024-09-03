@@ -1,0 +1,29 @@
+name: 'Deploy preview environment'
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+env:
+  BRANCH_NAME: ${{ github.head_ref }}
+
+jobs:
+  deploy-infra:
+    environment: preview
+
+    name: Deploy preview infra
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy infra
+        uses: ./.github/actions/infra
+        with:
+          WORKSPACE_NAME: ${{ env.BRANCH_NAME }}
+          API_URL: ${{ env.BRANCH_NAME}}-${{ vars.API_URL }}
+          WEBSITE_URL: ${{ env.BRANCH_NAME}}-${{ vars.WEBSITE_URL }}
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
