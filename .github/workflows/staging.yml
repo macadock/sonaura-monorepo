@@ -1,17 +1,17 @@
-name: 'Release'
+name: 'Update infra'
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [ "main"]
 
 permissions:
   contents: read
 
 jobs:
   deploy-infra:
-    environment: production
+    environment: staging
 
-    name: Deploy production infra
+    name: Deploy staging infra
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
