@@ -1,0 +1,37 @@
+name: 'Remove preview environment'
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [closed]
+
+permissions:
+  contents: read
+
+jobs:
+  remove-infra:
+    environment: preview
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+      TF_VAR_BRANCH_NAME: ${{ github.head_ref }}
+      TF_VAR_API_URL: ${{ github.head_ref}}-${{ vars.API_URL }}
+      TF_VAR_WEBSITE_URL: ${{ github.head_ref}}-${{ vars.WEBSITE_URL }}
+      TF_VAR_ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+      TF_VAR_CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+      TF_VAR_CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TF_VAR_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+
+    name: Remove preview infra
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove
+        uses: ./.github/actions/remove-infra
+        with:
+          INFRA_DIR: './packages/infra'
+          BRANCH_NAME: ${{ env.TF_VAR_BRANCH_NAME }}
