@@ -38,6 +38,12 @@ runs:
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
 
+    - name: Terraform Workspace Select
+      id: terraform-workspace-select
+      run: terraform workspace select default
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
     - name: Terraform Workspace Delete
       id: terraform-workspace-delete
       run: terraform workspace delete ${{ inputs.BRANCH_NAME }}
