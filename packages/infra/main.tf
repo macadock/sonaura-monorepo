@@ -42,7 +42,7 @@ variable "environment" {
   type = string
 }
 
-variable "workspace_name" {
+variable "branch_name" {
   type = string
 }
 
@@ -53,7 +53,7 @@ provider "cloudflare" {
 resource "cloudflare_workers_script" "sonaura-worker" {
   account_id         = var.cloudflare_account_id
   content            = file("worker.js")
-  name               = "api-${var.workspace_name}"
+  name               = "api-${var.branch_name}"
   compatibility_date = "2024-08-21"
 }
 
@@ -66,7 +66,7 @@ resource "cloudflare_workers_domain" "sonaura-worker-domain" {
 
 resource "cloudflare_pages_project" "marketing-pages" {
   account_id        = var.cloudflare_account_id
-  name              = "marketing"
+  name              = "marketing-${var.branch_name}"
   production_branch = "main"
 
   deployment_configs {

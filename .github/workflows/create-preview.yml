@@ -10,7 +10,7 @@ permissions:
 jobs:
   deploy-infra:
     env:
-      WORKSPACE_NAME: ${{ github.head_ref }}
+      BRANCH_NAME: ${{ github.head_ref }}
       API_URL: ${{ github.head_ref}}-${{ vars.API_URL }}
       WEBSITE_URL: ${{ github.head_ref}}-${{ vars.WEBSITE_URL }}
       ENVIRONMENT: ${{ vars.ENVIRONMENT }}
@@ -31,3 +31,6 @@ jobs:
 
       - name: Deploy infra
         uses: ./.github/actions/infra
+        with:
+          INFRA_DIR: './packages/infra'
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
