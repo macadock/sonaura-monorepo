@@ -2,7 +2,7 @@ terraform {
   cloud {
     organization = "Sonaura"
     workspaces {
-      name = "production"
+      name = "infra"
     }
   }
   required_providers {
@@ -25,45 +25,53 @@ variable "account_id" {
   default = "4569021434a99a933cf61a890e6ef2c2"
 }
 
-variable "domain" {
-  default = "sonaura.fr"
+variable "domain-api-staging" {
+  default = "api-staging.sonaura.fr"
+}
+
+variable "domain-api-production" {
+  default = "api.sonaura.fr"
+}
+
+variable "domain-marketing-pages" {
+  default = "dev.sonaura.fr"
 }
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
-resource "cloudflare_workers_script" "sonaura-worker-staging" {
+resource "cloudflare_workers_script" "worker-staging" {
   account_id         = var.account_id
   content            = file("worker.js")
   name               = "api-staging"
   compatibility_date = "2024-08-21"
 }
 
-resource "cloudflare_workers_script" "sonaura-worker-production" {
+resource "cloudflare_workers_script" "worker-production" {
   account_id         = var.account_id
   content            = file("worker.js")
   name               = "api"
   compatibility_date = "2024-08-21"
 }
 
-resource "cloudflare_workers_domain" "sonaura-worker-domain-production" {
+resource "cloudflare_workers_domain" "worker-domain-production" {
   account_id  = var.account_id
-  hostname    = "api.${var.domain}"
-  service     = cloudflare_workers_script.sonaura-worker-production.name
+  hostname    = var.domain-api-production
+  service     = cloudflare_workers_script.worker-production.name
   zone_id     = var.zone_id
   environment = "production"
 }
 
-resource "cloudflare_workers_domain" "sonaura-worker-domain-staging" {
+resource "cloudflare_workers_domain" "worker-domain-staging" {
   account_id  = var.account_id
-  hostname    = "api-staging.${var.domain}"
-  service     = cloudflare_workers_script.sonaura-worker-staging.name
+  hostname    = var.domain-api-staging
+  service     = cloudflare_workers_script.worker-staging.name
   zone_id     = var.zone_id
   environment = "staging"
 }
 
-resource "cloudflare_pages_project" "sonaura-marketing-pages" {
+resource "cloudflare_pages_project" "marketing-pages" {
   account_id        = var.account_id
   name              = "marketing"
   production_branch = "main"
@@ -90,13 +98,13 @@ resource "cloudflare_pages_project" "sonaura-marketing-pages" {
 
       service_binding {
         name        = "api"
-        service     = cloudflare_workers_script.sonaura-worker-production.name
+        service     = cloudflare_workers_script.worker-production.name
         environment = "production"
       }
 
       environment_variables = {
         ENVIRONMENT  = "production"
-        NEXT_API_URL = cloudflare_workers_domain.sonaura-worker-domain-production.hostname
+        NEXT_API_URL = var.domain-api-production
       }
     }
 
@@ -106,20 +114,20 @@ resource "cloudflare_pages_project" "sonaura-marketing-pages" {
 
       service_binding {
         name        = "api"
-        service     = cloudflare_workers_script.sonaura-worker-staging.name
+        service     = cloudflare_workers_script.worker-staging.name
         environment = "staging"
       }
 
       environment_variables = {
         ENVIRONMENT  = "staging"
-        NEXT_API_URL = cloudflare_workers_domain.sonaura-worker-domain-staging.hostname
+        NEXT_API_URL = var.domain-api-staging
       }
     }
   }
 }
 
-resource "cloudflare_pages_domain" "sonaura-marketing-pages_domain" {
+resource "cloudflare_pages_domain" "marketing-pages_domain" {
   account_id   = var.account_id
-  domain       = "dev.${var.domain}"
-  project_name = cloudflare_pages_project.sonaura-marketing-pages.name
+  domain       = var.domain-marketing-pages
+  project_name = cloudflare_pages_project.marketing-pages.name
 }
