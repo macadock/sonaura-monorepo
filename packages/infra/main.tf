@@ -93,7 +93,7 @@ resource "cloudflare_pages_project" "marketing-pages" {
 resource "cloudflare_record" "marketing-pages_domain_zone" {
   zone_id = var.CLOUDFLARE_ZONE_ID
   name    = var.WEBSITE_URL
-  content = cloudflare_pages_project.marketing-pages.name
+  content = cloudflare_pages_project.marketing-pages.domains[0]
   type    = "CNAME"
   proxied = true
 }
