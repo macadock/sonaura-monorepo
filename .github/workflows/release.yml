@@ -10,6 +10,18 @@ permissions:
 jobs:
   deploy-infra:
     environment: production
+    env:
+      BRANCH_NAME: ${{ github.head_ref }}
+      API_URL: ${{ vars.API_URL }}
+      WEBSITE_URL: ${{ vars.WEBSITE_URL }}
+      ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+      CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+
 
     name: Deploy production infra
     runs-on: ubuntu-latest
@@ -17,16 +29,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy infra
+      - name: Deploy preview infra
         uses: ./.github/actions/infra
         with:
-          WORKSPACE_NAME: ${{ vars.ENVIRONMENT }}
-          API_URL: ${{ vars.API_URL }}
-          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
-          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+          INFRA_DIR: './packages/infra'
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}

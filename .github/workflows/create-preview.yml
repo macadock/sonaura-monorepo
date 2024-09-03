@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   deploy-infra:
+    environment: preview
     env:
       BRANCH_NAME: ${{ github.head_ref }}
       API_URL: ${{ github.head_ref}}-${{ vars.API_URL }}
@@ -21,7 +22,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
 
-    environment: preview
 
     name: Deploy preview infra
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy infra
+      - name: Deploy preview infra
         uses: ./.github/actions/infra
         with:
           INFRA_DIR: './packages/infra'
