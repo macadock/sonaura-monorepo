@@ -36,6 +36,7 @@ jobs:
           BRANCH_NAME: ${{ env.TF_VAR_BRANCH_NAME }}
 
   deploy-apps:
+    needs: deploy-infra
     environment: preview
     env:
       BRANCH_NAME: ${{ github.head_ref }}
