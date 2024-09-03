@@ -43,6 +43,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - run: echo "${{ vars.ENVIRONMENT }}"
+        shell: bash
+
       - name: Run Deploy App Action
         uses: ./.github/actions/deploy-app
         with:
