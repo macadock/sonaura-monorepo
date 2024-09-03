@@ -2,8 +2,6 @@
 
 import { getRequestContext } from "@cloudflare/next-on-pages";
 
-export const runtime = 'edge'
-
 export default async function getPublicApiUrl() {
   const { env } = getRequestContext()
 
