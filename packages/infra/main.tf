@@ -51,7 +51,7 @@ resource "cloudflare_workers_script" "worker-staging" {
 resource "cloudflare_workers_script" "worker-production" {
   account_id         = var.account_id
   content            = file("worker.js")
-  name               = "api"
+  name               = "api-production"
   compatibility_date = "2024-08-21"
 }
 
@@ -60,7 +60,6 @@ resource "cloudflare_workers_domain" "worker-domain-production" {
   hostname    = var.domain-api-production
   service     = cloudflare_workers_script.worker-production.name
   zone_id     = var.zone_id
-  environment = "production"
 }
 
 resource "cloudflare_workers_domain" "worker-domain-staging" {
@@ -68,7 +67,6 @@ resource "cloudflare_workers_domain" "worker-domain-staging" {
   hostname    = var.domain-api-staging
   service     = cloudflare_workers_script.worker-staging.name
   zone_id     = var.zone_id
-  environment = "staging"
 }
 
 resource "cloudflare_pages_project" "marketing-pages" {
