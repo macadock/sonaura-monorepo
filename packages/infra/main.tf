@@ -38,6 +38,18 @@ resource "cloudflare_workers_script" "sonaura-worker" {
   content            = file("worker.js")
   name               = "api"
   compatibility_date = "2024-08-21"
+
+  service_binding {
+    name        = ""
+    service     = ""
+    environment = "production"
+  }
+
+  service_binding {
+    name        = ""
+    service     = ""
+    environment = "staging"
+  }
 }
 
 resource "cloudflare_workers_domain" "sonaura-worker-domain-production" {
