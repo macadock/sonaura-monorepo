@@ -38,8 +38,8 @@ runs:
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
 
-    - name: Terraform Workspace Select
-      id: terraform-workspace-select
+    - name: Terraform Workspace back to default
+      id: terraform-workspace-select-default
       run: terraform workspace select default
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
