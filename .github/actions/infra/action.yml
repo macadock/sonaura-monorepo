@@ -1,5 +1,14 @@
 name: 'Update infra'
 
+inputs:
+  INFRA_DIR:
+    description: 'Path to infra directory'
+    required: true
+    default: './packages/infra'
+  BRANCH_NAME:
+    description: 'Terraform workspace name'
+    required: true
+
 runs:
   using: "composite"
   steps:
@@ -14,29 +23,29 @@ runs:
     - name: Terraform Workspace Select
       id: terraform-workspace-select
       shell: bash
-      working-directory: ${{ env.INFRA_DIR }}
-      run: terraform workspace select -or-create ${{ env.WORKSPACE_NAME }}
+      working-directory: ${{ inputs.INFRA_DIR }}
+      run: terraform workspace select -or-create ${{ inputs.BRANCH_NAME }}
 
     - name: Terraform Init
       id: terraform-init
       run: terraform init
       shell: bash
-      working-directory: ${{ env.INFRA_DIR }}
+      working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Format
       id: terraform-format
       run: terraform fmt -check
       shell: bash
-      working-directory: ${{ env.INFRA_DIR }}
+      working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Plan
       id: terraform-plan
       run: terraform plan -input=false
       shell: bash
-      working-directory: ${{ env.INFRA_DIR }}
+      working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Apply
       id: terraform-apply
       shell: bash
-      working-directory: ${{ env.INFRA_DIR }}
+      working-directory: ${{ inputs.INFRA_DIR }}
       run: terraform apply -auto-approve -input=false
