@@ -1,4 +1,4 @@
-name: 'Update infra'
+name: 'Deploy staging environment'
 
 on:
   push:
@@ -34,3 +34,22 @@ jobs:
         with:
           INFRA_DIR: './packages/infra'
           BRANCH_NAME: ${{ env.TF_VAR_BRANCH_NAME }}
+
+  deploy-apps:
+    needs: deploy-infra
+    environment: staging
+    env:
+      BRANCH_NAME: ${{ github.head_ref }}
+    name: Deploy apps
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy
+        uses: ./.github/actions/deploy-app
+        with:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
