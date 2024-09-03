@@ -13,5 +13,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo ${{ vars.ENVIRONMENT }}
+      - run: echo ${{ env.ENVIRONMENT }}
         shell: bash
