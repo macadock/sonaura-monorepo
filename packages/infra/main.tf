@@ -56,17 +56,17 @@ resource "cloudflare_workers_script" "worker-production" {
 }
 
 resource "cloudflare_workers_domain" "worker-domain-production" {
-  account_id  = var.account_id
-  hostname    = var.domain-api-production
-  service     = cloudflare_workers_script.worker-production.name
-  zone_id     = var.zone_id
+  account_id = var.account_id
+  hostname   = var.domain-api-production
+  service    = cloudflare_workers_script.worker-production.name
+  zone_id    = var.zone_id
 }
 
 resource "cloudflare_workers_domain" "worker-domain-staging" {
-  account_id  = var.account_id
-  hostname    = var.domain-api-staging
-  service     = cloudflare_workers_script.worker-staging.name
-  zone_id     = var.zone_id
+  account_id = var.account_id
+  hostname   = var.domain-api-staging
+  service    = cloudflare_workers_script.worker-staging.name
+  zone_id    = var.zone_id
 }
 
 resource "cloudflare_pages_project" "marketing-pages" {
