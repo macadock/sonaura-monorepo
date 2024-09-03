@@ -40,5 +40,5 @@ runs:
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
-        command: deploy --name api-${{ inputs.BRANCH_NAME }} --minify
+        command: deploy ./src/index.ts --name api-${{ inputs.BRANCH_NAME }} --minify
         workingDirectory: "./apps/api"
