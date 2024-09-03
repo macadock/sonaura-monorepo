@@ -24,7 +24,7 @@ runs:
       shell: bash
 
     - name: Build frontend
-      run: npm run build:ci
+      run: npm run build-ci
       shell: bash
 
     - name: Deploy marketing
