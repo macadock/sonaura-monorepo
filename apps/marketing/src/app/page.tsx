@@ -1,7 +1,10 @@
 import Image from "next/image";
+import { getRequestContext } from "@cloudflare/next-on-pages";
 
 export default function Home() {
-  const nextApi = process.env.NEXT_PUBLIC_API_URL
+  const { env, cf, ctx } = getRequestContext();
+
+  const nextApi = env.NEXT_PUBLIC_API_URL
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
