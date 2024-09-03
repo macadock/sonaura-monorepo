@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "build:ci": "turbo build:ci",
+    "build-ci": "turbo build-ci",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
