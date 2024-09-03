@@ -1,9 +1,11 @@
 import Image from "next/image";
 import getPublicApiUrl from "@/app/getPublicApiUrl";
 
-export default async function Home() {
+export const runtime = "edge";
 
-  const nextApi = await getPublicApiUrl()
+export default function Home() {
+
+  const nextApi = getPublicApiUrl()
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
