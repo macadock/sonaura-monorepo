@@ -10,16 +10,35 @@ inputs:
   ENVIRONMENT:
     description: 'The environment to deploy to'
     required: true
+  BRANCH_NAME:
+    description: 'The branch name'
+    required: true
 
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v4
 
+    - name: Install dependencies
+      run: npm install
+      shell: bash
+
+    - name: Build apps
+      run: npm run build
+      shell: bash
+
+    - name: Deploy marketing
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
+        command: pages deploy ./.next/static --project-name marketing-${{ inputs.BRANCH_NAME }}
+        workingDirectory: "./apps/marketing"
+
     - name: Deploy api
       uses: cloudflare/wrangler-action@v3
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
-        command: deploy --env ${{ inputs.ENVIRONMENT }}
+        command: deploy --name api-${{ inputs.BRANCH_NAME }} --minify
         workingDirectory: "./apps/api"
