@@ -9,6 +9,16 @@ permissions:
 
 env:
   BRANCH_NAME: ${{ github.head_ref }}
+  WORKSPACE_NAME: ${{ env.BRANCH_NAME }}
+  API_URL: ${{ env.BRANCH_NAME}}-${{ vars.API_URL }}
+  WEBSITE_URL: ${{ env.BRANCH_NAME}}-${{ vars.WEBSITE_URL }}
+  ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+  CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
 
 jobs:
   deploy-infra:
@@ -22,14 +32,3 @@ jobs:
 
       - name: Deploy infra
         uses: ./.github/actions/infra
-        with:
-          WORKSPACE_NAME: ${{ env.BRANCH_NAME }}
-          API_URL: ${{ env.BRANCH_NAME}}-${{ vars.API_URL }}
-          WEBSITE_URL: ${{ env.BRANCH_NAME}}-${{ vars.WEBSITE_URL }}
-          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
