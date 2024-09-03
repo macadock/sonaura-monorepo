@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 export default function Home() {
-  const nextApi = process.env.NEXT_API
+  const nextApi = process.env.NEXT_API_URL
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

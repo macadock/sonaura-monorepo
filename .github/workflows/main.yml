@@ -19,7 +19,7 @@ jobs:
         uses: ./.github/actions/check-infra
         with:
           TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-          INFRA_DIR: ./packages/infra/staging
+          INFRA_DIR: ./packages/infra
 
   deploy-infra:
     name: Deploy infra
@@ -33,7 +33,7 @@ jobs:
         uses: ./.github/actions/deploy-infra
         with:
           TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-          INFRA_DIR: ./packages/infra/staging
+          INFRA_DIR: ./packages/infra
 
   deploy-app:
     name: Deploy app
@@ -48,4 +48,4 @@ jobs:
         with:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          API_ENV: staging
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
