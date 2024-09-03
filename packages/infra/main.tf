@@ -18,58 +18,58 @@ terraform {
   }
 }
 
-variable "cloudflare_api_token" {
+variable "CLOUDFLARE_API_TOKEN" {
   type      = string
   sensitive = true
 }
 
-variable "cloudflare_zone_id" {
+variable "CLOUDFLARE_ZONE_ID" {
   type      = string
   sensitive = true
 }
 
-variable "cloudflare_account_id" {
+variable "CLOUDFLARE_ACCOUNT_ID" {
   type      = string
   sensitive = true
 }
 
-variable "api_url" {
+variable "API_URL" {
   type = string
 }
 
-variable "website_url" {
+variable "WEBSITE_URL" {
   type = string
 }
 
-variable "environment" {
+variable "ENVIRONMENT" {
   type = string
 }
 
-variable "branch_name" {
+variable "BRANCH_NAME" {
   type = string
 }
 
 provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+  api_token = var.CLOUDFLARE_API_TOKEN
 }
 
 resource "cloudflare_workers_script" "sonaura-worker" {
-  account_id         = var.cloudflare_account_id
+  account_id         = var.CLOUDFLARE_ACCOUNT_ID
   content            = file("worker.js")
-  name               = "api-${var.branch_name}"
+  name               = "api-${var.BRANCH_NAME}"
   compatibility_date = "2024-08-21"
 }
 
 resource "cloudflare_workers_domain" "sonaura-worker-domain" {
-  account_id = var.cloudflare_account_id
-  hostname   = var.api_url
+  account_id = var.CLOUDFLARE_ACCOUNT_ID
+  hostname   = var.API_URL
   service    = cloudflare_workers_script.sonaura-worker.name
-  zone_id    = var.cloudflare_zone_id
+  zone_id    = var.CLOUDFLARE_ZONE_ID
 }
 
 resource "cloudflare_pages_project" "marketing-pages" {
-  account_id        = var.cloudflare_account_id
-  name              = "marketing-${var.branch_name}"
+  account_id        = var.CLOUDFLARE_ACCOUNT_ID
+  name              = "marketing-${var.BRANCH_NAME}"
   production_branch = "main"
 
   deployment_configs {
@@ -84,15 +84,15 @@ resource "cloudflare_pages_project" "marketing-pages" {
       }
 
       environment_variables = {
-        ENVIRONMENT  = var.environment
-        NEXT_API_URL = var.api_url
+        ENVIRONMENT  = var.ENVIRONMENT
+        NEXT_API_URL = var.API_URL
       }
     }
   }
 }
 
 resource "cloudflare_pages_domain" "marketing-pages_domain" {
-  account_id   = var.cloudflare_account_id
-  domain       = var.website_url
+  account_id   = var.CLOUDFLARE_ACCOUNT_ID
+  domain       = var.WEBSITE_URL
   project_name = cloudflare_pages_project.marketing-pages.name
 }
