@@ -3,14 +3,21 @@
   "scripts": {
     "build": "turbo build",
     "build-ci": "turbo build-ci",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
+    "dev": "turbo dev && supabase:start",
+    "supabase:start": "npm run start --workspace=packages/supabase",
+    "supabase:stop": "npm run stop --workspace=packages/supabase",
+    "supabase:gen": "npm run gen --workspace=packages/supabase",
+    "supabase:reset": "npm run reset --workspace=packages/supabase",
+    "supabase:migrate": "mnpm run igrate --workspace=packages/supabase",
+    "supabase:seed": "npm run run seed --workspace=packages/supabase",
+    "lint": "npm run format-and-lint --workspace=packages/biome",
     "type-check": "turbo type-check",
     "clean": "turbo clean",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "deploy": "turbo deploy"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "turbo": "^2.1.0"

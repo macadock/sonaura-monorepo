@@ -2,7 +2,8 @@ export const runtime = 'edge'
 
 export default function Home() {
 
-  const nextApiLocalhost = process.env.NEXT_PUBLIC_API_URL
+  const nextApiLocalhost = process.env.NEXT_PUBLIC_API_UR
+
 
   return (
     <main>
