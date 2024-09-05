@@ -8,6 +8,15 @@
 		"rules": {
 			"recommended": true
 		},
-		"ignore": ["**/.idea", "**/.turbo", "**/.wrangler", "**/dist"]
+		"include": ["../../apps/**/*.{js,ts,jsx,tsx}"],
+		"ignore": [
+			"node_modules",
+			"dist",
+			"build",
+			"**/.next/**",
+			"**/.wrangler/**",
+			"**/.turbo/**",
+			"**/.vercel/**"
+		]
 	}
 }

@@ -1,9 +1,9 @@
 {
-  "name": "@repo/biome",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "format-and-lint": "biome check ../../",
-    "format-and-lint:fix": "biome check ../../ --write"
-  }
+	"name": "@repo/biome",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"format-and-lint": "biome check ../../",
+		"format-and-lint:fix": "biome check ../../ --write"
+	}
 }
