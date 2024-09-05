@@ -1,9 +1,9 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
 import { pages } from "./routes";
 
-const app = new Hono<{ Bindings: CloudflareBindings }>().basePath('/api')
+const app = new Hono<{ Bindings: CloudflareBindings }>().basePath("/api");
 
-app.route('/pages', pages)
+app.route("/pages", pages);
 
 // eslint-disable-next-line import/no-default-export
-export default app
+export default app;
