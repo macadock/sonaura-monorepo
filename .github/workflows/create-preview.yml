@@ -75,7 +75,7 @@ jobs:
             // 2. Prepare format of the comment
             const output = `#### Preview URL 👉
             
-            [https://preview-${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/](https://preview-${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/)`
+            [https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/](https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/)`
           
             // 3. If we have a comment, update it, otherwise create a new one
             if (botComment) {
