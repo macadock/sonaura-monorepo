@@ -24,7 +24,6 @@ jobs:
       TF_VAR_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       TF_VAR_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
-
     name: Deploy staging infra
     runs-on: ubuntu-latest
     steps:
