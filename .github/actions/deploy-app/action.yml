@@ -64,7 +64,7 @@ runs:
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
-          console.log(context)
+          console.log(context.payload.workflow_run)
           return
           // 1. Retrieve existing bot comments for the PR
           const { data: comments } = await github.rest.issues.listComments({
@@ -79,8 +79,8 @@ runs:
           // 2. Prepare format of the comment
           const output = `#### Preview URL 👉
 
-          Marketing: [https://${{ github.head_ref}}-${{ inputs.WEBSITE_URL }}/](https://${{ github.head_ref}}-${{ inputs.WEBSITE_URL }}/){:target="_blank"}
-          API: [https://${{ github.head_ref}}-${{ inputs.API_URL }}/api](https://${{ github.head_ref}}-${{ inputs.API_URL }}/api){:target="_blank"}`
+          Marketing: [https://${context.payload.workflow_run.head_branch}-${{ inputs.WEBSITE_URL }}/](https://${context.payload.workflow_run.head_branch}-${{ inputs.WEBSITE_URL }}/){:target="_blank"}
+          API: [https://${context.payload.workflow_run.head_branch}-${{ inputs.API_URL }}/api](https://${context.payload.workflow_run.head_branch}-${{ inputs.API_URL }}/api){:target="_blank"}`
 
           // 3. If we have a comment, update it, otherwise create a new one
           if (botComment) {
