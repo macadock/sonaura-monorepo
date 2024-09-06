@@ -20,6 +20,8 @@ runs:
         script: |
           const branchName = '${{ inputs.BRANCH_NAME }}'
           // Replace '/' with '-'
-          const normalizedBranchName = branchName.replace(/\//g, '-')
+          // Replace '_' with '-'
+          // Replace '.' with '-'
+          const normalizedBranchName = branchName.replace(/\//g, '-').replace(/_/g, '-').replace(/\./g, '-')
           return normalizedBranchName
         result-encoding: string
