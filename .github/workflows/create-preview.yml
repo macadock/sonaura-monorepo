@@ -1,10 +1,7 @@
 name: 'Deploy preview environment'
 
 on:
-  workflow_run:
-    workflows: ["Lint"]
-    types:
-      - completed
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -32,9 +29,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - run: echo "Main branch name is ${{ env.TF_VAR_BRANCH_NAME }}"
-        shell: bash
 
       - name: Deploy
         uses: ./.github/actions/infra
