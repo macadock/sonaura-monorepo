@@ -1,5 +1,7 @@
 name: 'Deploy staging environment'
 
+concurrency: staging
+
 on:
   push:
     branches: [ "main"]

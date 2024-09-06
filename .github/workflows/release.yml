@@ -1,5 +1,7 @@
 name: 'Release'
 
+concurrency: production
+
 on:
   release:
     types: [published]
