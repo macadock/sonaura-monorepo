@@ -2,8 +2,8 @@ name: 'Remove preview environment'
 
 on:
   pull_request_target:
-    branches: [ "main" ]
     types: [closed]
+    branches: [ "main" ]
   workflow_dispatch:
     inputs:
       branch_name:
