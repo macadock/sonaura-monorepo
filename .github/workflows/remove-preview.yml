@@ -44,4 +44,4 @@ jobs:
         uses: ./.github/actions/update-infra
         with:
           BRANCH_NAME: ${{ env.TF_VAR_BRANCH_NAME }}
-          DESTROY: true
+          DESTROY: 'true'
