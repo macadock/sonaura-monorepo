@@ -1,7 +1,7 @@
 resource "cloudflare_pages_project" "marketing-pages" {
   account_id        = var.CLOUDFLARE_ACCOUNT_ID
   name              = "marketing-${var.BRANCH_NAME}"
-  production_branch = var.BRANCH_NAME
+  production_branch = "main"
   deployment_configs {
     production {
       compatibility_date  = "2024-08-21"
