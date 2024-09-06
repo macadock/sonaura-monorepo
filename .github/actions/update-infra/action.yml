@@ -35,7 +35,10 @@ runs:
     - name: Update environment variables
       id: update-environment-variables
       shell: bash
-      run: echo "TF_VAR_BRANCH_NAME=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}" >> $GITHUB_ENV
+      run: |
+        echo "TF_VAR_BRANCH_NAME=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}" >> $GITHUB_ENV
+        echo "TF_VAR_API_URL=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}-${{ vars.API_URL }}" >> $GITHUB_ENV
+        echo "TF_VAR_WEBSITE_URL=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}-${{ vars.WEBSITE_URL }}" >> $GITHUB_ENV
 
     - name: Terraform Workspace Select
       id: terraform-workspace-select
