@@ -53,3 +53,5 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           ENVIRONMENT: ${{ vars.ENVIRONMENT }}
           BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
+          API_URL: ${{ vars.API_URL }}

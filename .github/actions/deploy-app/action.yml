@@ -16,6 +16,12 @@ inputs:
   GITHUB_TOKEN:
     description: 'The GitHub token'
     required: false
+  WEBSITE_URL:
+    description: 'The website URL'
+    required: true
+  API_URL:
+    description: 'The API URL'
+    required: true
 
 runs:
   using: "composite"
@@ -71,8 +77,8 @@ runs:
           // 2. Prepare format of the comment
           const output = `#### Preview URL 👉
 
-          Marketing: [https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/](https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/){:target="_blank"}
-          API: [https://${{ github.head_ref}}-${{ vars.API_URL }}/api](https://${{ github.head_ref}}-${{ vars.API_URL }}/api){:target="_blank"}`
+          Marketing: [https://${{ github.head_ref}}-${{ inputs.WEBSITE_URL }}/](https://${{ github.head_ref}}-${{ inputs.WEBSITE_URL }}/){:target="_blank"}
+          API: [https://${{ github.head_ref}}-${{ inputs.API_URL }}/api](https://${{ github.head_ref}}-${{ inputs.API_URL }}/api){:target="_blank"}`
 
           // 3. If we have a comment, update it, otherwise create a new one
           if (botComment) {

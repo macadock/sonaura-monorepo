@@ -59,3 +59,5 @@ jobs:
           ENVIRONMENT: ${{ vars.ENVIRONMENT }}
           BRANCH_NAME: ${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
+          API_URL: ${{ vars.API_URL }}
