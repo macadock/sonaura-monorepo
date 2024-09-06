@@ -1,0 +1,25 @@
+name: 'Normalize branch name'
+
+inputs:
+  BRANCH_NAME:
+    description: 'The branch name'
+    required: true
+
+outputs:
+  NORMALIZED_BRANCH_NAME:
+    description: 'The normalized branch name'
+    value: ${{ steps.normalize-branch-name.outputs.result }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Normalize branch name
+      uses: actions/github-script@v7
+      id: normalize-branch-name
+      with:
+        script: |
+          const branchName = '${{ inputs.BRANCH_NAME }}'
+          // Replace '/' with '-'
+          const normalizedBranchName = branchName.replace(/\//g, '-')
+          return normalizedBranchName
+        result-encoding: string
