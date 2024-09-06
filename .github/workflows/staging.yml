@@ -12,20 +12,6 @@ permissions:
 jobs:
   deploy-infra:
     environment: staging
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
-      TF_VAR_BRANCH_NAME: ${{ github.ref_name }}
-      TF_VAR_API_URL: ${{ vars.API_URL }}
-      TF_VAR_WEBSITE_URL: ${{ vars.WEBSITE_URL }}
-      TF_VAR_ENVIRONMENT: ${{ vars.ENVIRONMENT }}
-      TF_VAR_CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-      TF_VAR_CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      TF_VAR_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      TF_VAR_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      TF_VAR_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-
     name: Deploy staging infra
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +21,7 @@ jobs:
       - name: Deploy
         uses: ./.github/actions/update-infra
         with:
-          BRANCH_NAME: ${{ env.TF_VAR_BRANCH_NAME }}
+          BRANCH_NAME: ${{ github.ref_name }}
           API_URL: ${{ vars.API_URL }}
           WEBSITE_URL: ${{ vars.WEBSITE_URL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
