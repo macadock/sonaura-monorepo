@@ -32,7 +32,7 @@ runs:
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
-        command: pages deploy ./.vercel/output/static --project-name marketing-${{ inputs.BRANCH_NAME }}
+        command: pages deploy ./.vercel/output/static --project-name marketing-${{ inputs.BRANCH_NAME }} --branch main
         workingDirectory: "./apps/marketing"
 
     - name: Build and deploy api
