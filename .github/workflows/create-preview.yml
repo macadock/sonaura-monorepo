@@ -78,7 +78,8 @@ jobs:
             // 2. Prepare format of the comment
             const output = `#### Preview URL 👉
             
-            [https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/](https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/)`
+            Marketing: [https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/](https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/)
+            API: [https://${{ github.head_ref}}-${{ vars.API_URL }}/api](https://${{ github.head_ref}}-${{ vars.API_URL }}/api)`
           
             // 3. If we have a comment, update it, otherwise create a new one
             if (botComment) {
