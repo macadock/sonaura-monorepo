@@ -69,12 +69,12 @@ runs:
       id: create-environment-variables
       shell: bash
       run: |
+        echo "AWS_ACCESS_KEY_ID=${{ inputs.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+        echo "AWS_SECRET_ACCESS_KEY=${{ inputs.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+        echo "AWS_ENDPOINT_URL_S3=${{ inputs.AWS_ENDPOINT_URL_S3 }}" >> $GITHUB_ENV
         echo "TF_VAR_BRANCH_NAME=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}" >> $GITHUB_ENV
         echo "TF_VAR_API_URL=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}-${{ inputs.API_URL }}" >> $GITHUB_ENV
         echo "TF_VAR_WEBSITE_URL=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}-${{ inputs.WEBSITE_URL }}" >> $GITHUB_ENV
-        echo "TF_VAR_AWS_ACCESS_KEY_ID=${{ inputs.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
-        echo "TF_VAR_AWS_SECRET_ACCESS_KEY=${{ inputs.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-        echo "TF_VAR_AWS_ENDPOINT_URL_S3=${{ inputs.AWS_ENDPOINT_URL_S3 }}" >> $GITHUB_ENV
         echo "TF_VAR_ENVIRONMENT=${{ inputs.ENVIRONMENT }}" >> $GITHUB_ENV
         echo "TF_VAR_CLOUDFLARE_API_TOKEN=${{ inputs.CLOUDFLARE_API_TOKEN }}" >> $GITHUB_ENV
         echo "TF_VAR_CLOUDFLARE_ACCOUNT_ID=${{ inputs.CLOUDFLARE_ACCOUNT_ID }}" >> $GITHUB_ENV
