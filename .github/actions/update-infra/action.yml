@@ -40,42 +40,42 @@ runs:
       run: terraform workspace select ${{ inputs.DESTROY == true && '' || '-or-create' }} ${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}
 
     - name: Terraform Format
-      if: ${{ inputs.DESTROY == false }}
+      if: ${{ !inputs.DESTROY }}
       id: terraform-format
       run: terraform fmt -check
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Plan
-      if: ${{ inputs.DESTROY == false }}
+      if: ${{ !inputs.DESTROY }}
       id: terraform-plan
       run: terraform plan -input=false
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Apply
-      if: ${{ inputs.DESTROY == false }}
+      if: ${{ !inputs.DESTROY }}
       id: terraform-apply
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
       run: terraform apply -auto-approve -input=false
 
     - name: Terraform Destroy
-      if: ${{ inputs.DESTROY == true }}
+      if: ${{ inputs.DESTROY }}
       id: terraform-destroy
       run: terraform destroy -auto-approve -input=false
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Workspace back to default
-      if: ${{ inputs.DESTROY == true }}
+      if: ${{ inputs.DESTROY }}
       id: terraform-workspace-select-default
       run: terraform workspace select default
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
 
     - name: Terraform Workspace Delete
-      if: ${{ inputs.DESTROY == true }}
+      if: ${{ inputs.DESTROY }}
       id: terraform-workspace-delete
       run: terraform workspace delete ${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}
       shell: bash
