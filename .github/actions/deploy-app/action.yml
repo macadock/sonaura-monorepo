@@ -13,11 +13,20 @@ inputs:
   BRANCH_NAME:
     description: 'The branch name'
     required: true
+  GITHUB_TOKEN:
+    description: 'The GitHub token'
+    required: false
 
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v4
+
+    - name: Normalize branch name
+      id: normalize-branch-name
+      uses: ./.github/actions/normalize-branch-name
+      with:
+        BRANCH_NAME: ${{ inputs.BRANCH_NAME }}
 
     - name: Install dependencies
       run: npm install
@@ -32,7 +41,7 @@ runs:
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
-        command: pages deploy ./.vercel/output/static --project-name marketing-${{ inputs.BRANCH_NAME }} --branch main
+        command: pages deploy ./.vercel/output/static --project-name marketing-${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }} --branch main
         workingDirectory: "./apps/marketing"
 
     - name: Build and deploy api
@@ -40,5 +49,44 @@ runs:
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
-        command: deploy --name api-${{ inputs.BRANCH_NAME }} --minify
+        command: deploy --name api-${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }} --minify
         workingDirectory: "./apps/api"
+
+    - name: Add links to PR comment
+      uses: actions/github-script@v7
+      if: github.event_name == 'pull_request' && inputs.GITHUB_TOKEN
+      with:
+        github-token: ${{ inputs.GITHUB_TOKEN }}
+        script: |
+          // 1. Retrieve existing bot comments for the PR
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          })
+          const botComment = comments.find(comment => {
+            return comment.user.type === 'Bot' && comment.body.includes('Preview URL')
+          })
+
+          // 2. Prepare format of the comment
+          const output = `#### Preview URL 👉
+
+          Marketing: [https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/](https://${{ github.head_ref}}-${{ vars.WEBSITE_URL }}/){:target="_blank"}
+          API: [https://${{ github.head_ref}}-${{ vars.API_URL }}/api](https://${{ github.head_ref}}-${{ vars.API_URL }}/api){:target="_blank"}`
+
+          // 3. If we have a comment, update it, otherwise create a new one
+          if (botComment) {
+            github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: output
+            })
+          } else {
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+          }

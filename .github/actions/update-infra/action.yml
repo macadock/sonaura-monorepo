@@ -1,0 +1,82 @@
+name: 'Update or destroy infra'
+description: 'Update or destroy infra'
+inputs:
+  BRANCH_NAME:
+    description: 'Terraform workspace name'
+    required: true
+  INFRA_DIR:
+    description: 'Path to infra directory'
+    required: false
+    default: './packages/infra'
+  DESTROY:
+    type: boolean
+    description: 'Destroy infra'
+    required: false
+    default: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Terraform
+      id: setup-terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      id: terraform-init
+      run: terraform init
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
+    - name: Normalize branch name
+      id: normalize-branch-name
+      uses: ./.github/actions/normalize-branch-name
+      with:
+        BRANCH_NAME: ${{ inputs.BRANCH_NAME }}
+
+    - name: Terraform Workspace Select
+      id: terraform-workspace-select
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+      run: terraform workspace select ${{ inputs.DESTROY == false && '-or-create' }} ${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}
+
+    - name: Terraform Format
+      if: inputs.DESTROY == false
+      id: terraform-format
+      run: terraform fmt -check
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
+    - name: Terraform Plan
+      if: inputs.DESTROY == false
+      id: terraform-plan
+      run: terraform plan -input=false
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
+    - name: Terraform Apply
+      if: inputs.DESTROY == false
+      id: terraform-apply
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+      run: terraform apply -auto-approve -input=false
+
+    - name: Terraform Destroy
+      if: inputs.DESTROY == true
+      id: terraform-destroy
+      run: terraform destroy -auto-approve -input=false
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
+    - name: Terraform Workspace back to default
+      if: inputs.DESTROY == true
+      id: terraform-workspace-select-default
+      run: terraform workspace select default
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
+    - name: Terraform Workspace Delete
+      if: inputs.DESTROY == true
+      id: terraform-workspace-delete
+      run: terraform workspace delete ${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
