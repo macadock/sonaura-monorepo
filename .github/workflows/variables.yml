@@ -15,4 +15,5 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            console.log(${{ github }})
+            const github = ${{ github.event }}
+            console.log(github)
