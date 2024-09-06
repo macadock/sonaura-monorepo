@@ -77,8 +77,8 @@ runs:
           // 2. Prepare format of the comment
           const output = `#### Preview URL 👉
 
-          Marketing: [https://${context.payload.workflow_run.head_branch}-${{ inputs.WEBSITE_URL }}/](https://${context.payload.workflow_run.head_branch}-${{ inputs.WEBSITE_URL }}/){:target="_blank"}
-          API: [https://${context.payload.workflow_run.head_branch}-${{ inputs.API_URL }}/api](https://${context.payload.workflow_run.head_branch}-${{ inputs.API_URL }}/api){:target="_blank"}`
+          Marketing: [https://${context.payload.workflow_run.head_branch}-${{ inputs.WEBSITE_URL }}/](https://${context.payload.workflow_run.head_branch}-${{ inputs.WEBSITE_URL }}/)
+          API: [https://${context.payload.workflow_run.head_branch}-${{ inputs.API_URL }}/api](https://${context.payload.workflow_run.head_branch}-${{ inputs.API_URL }}/api)`
 
           // 3. If we have a comment, update it, otherwise create a new one
           if (botComment) {
