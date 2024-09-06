@@ -64,13 +64,11 @@ runs:
       with:
         github-token: ${{ inputs.GITHUB_TOKEN }}
         script: |
-          console.log(context.payload.workflow_run)
-          return
           // 1. Retrieve existing bot comments for the PR
           const { data: comments } = await github.rest.issues.listComments({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: context.issue.number,
+            issue_number: context.payload.workflow_run.pull_requests[0].number
           })
           const botComment = comments.find(comment => {
             return comment.user.type === 'Bot' && comment.body.includes('Preview URL')
@@ -92,7 +90,7 @@ runs:
             })
           } else {
             github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: context.payload.workflow_run.pull_requests[0].number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: output
@@ -100,7 +98,7 @@ runs:
           }
           
           github.rest.issues.addLabels({
-              issue_number: context.issue.number,
+              issue_number: context.payload.workflow_run.pull_requests[0].number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               labels: ['preview']
