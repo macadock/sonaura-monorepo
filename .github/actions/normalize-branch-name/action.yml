@@ -23,6 +23,6 @@ runs:
           // Replace '_' with '-'
           // Replace '.' with '-'
           // Remove 'dependabot/npm_and_yarn/'
-          const normalizedBranchName = branchName.replace(/\//g, '-').replace(/_/g, '-').replace(/\./g, '-')
+          const normalizedBranchName = branchName.replace(/\//g, '-').replace(/_/g, '-').replace(/\./g, '-').replace('dependabot/npm_and_yarn/', '')
           return normalizedBranchName
         result-encoding: string
