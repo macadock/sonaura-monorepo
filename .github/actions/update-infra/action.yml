@@ -49,6 +49,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Normalize branch name
+      id: normalize-branch-name
+      uses: ./.github/actions/normalize-branch-name
+      with:
+        BRANCH_NAME: ${{ inputs.BRANCH_NAME }}
+
     - name: Create environment variables
       id: create-environment-variables
       shell: bash
@@ -75,12 +81,6 @@ runs:
       run: terraform init
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
-
-    - name: Normalize branch name
-      id: normalize-branch-name
-      uses: ./.github/actions/normalize-branch-name
-      with:
-        BRANCH_NAME: ${{ inputs.BRANCH_NAME }}
 
     - name: Terraform Workspace Select
       id: terraform-workspace-select
