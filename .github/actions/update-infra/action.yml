@@ -94,7 +94,7 @@ runs:
       id: terraform-workspace-select
       shell: bash
       working-directory: ${{ inputs.INFRA_DIR }}
-      run: terraform workspace select -or-create=${{ inputs.DESTROY == true && 'false' || 'true' }} ${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}
+      run: terraform workspace select -or-create=${{ inputs.DESTROY == 'true' && 'false' || 'true' }} ${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}
 
     - name: Terraform Format
       if: ${{ inputs.DESTROY == 'false' }}
