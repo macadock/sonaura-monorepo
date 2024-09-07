@@ -49,22 +49,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup Terraform
-      id: setup-terraform
-      uses: hashicorp/setup-terraform@v3
-
-    - name: Terraform Init
-      id: terraform-init
-      run: terraform init
-      shell: bash
-      working-directory: ${{ inputs.INFRA_DIR }}
-
-    - name: Normalize branch name
-      id: normalize-branch-name
-      uses: ./.github/actions/normalize-branch-name
-      with:
-        BRANCH_NAME: ${{ inputs.BRANCH_NAME }}
-
     - name: Create environment variables
       id: create-environment-variables
       shell: bash
@@ -82,6 +66,22 @@ runs:
         echo "TF_VAR_SUPABASE_URL=${{ inputs.SUPABASE_URL }}" >> $GITHUB_ENV
         echo "TF_VAR_SUPABASE_ANON_KEY=${{ inputs.SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
         
+    - name: Setup Terraform
+      id: setup-terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      id: terraform-init
+      run: terraform init
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
+    - name: Normalize branch name
+      id: normalize-branch-name
+      uses: ./.github/actions/normalize-branch-name
+      with:
+        BRANCH_NAME: ${{ inputs.BRANCH_NAME }}
+
     - name: Terraform Workspace Select
       id: terraform-workspace-select
       shell: bash
