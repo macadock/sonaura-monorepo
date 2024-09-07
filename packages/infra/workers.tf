@@ -1,6 +1,6 @@
 resource "cloudflare_workers_script" "sonaura-worker" {
   account_id         = var.CLOUDFLARE_ACCOUNT_ID
-  content            = file("worker.js")
+  content            = file("../../apps/api/dist/index.js")
   name               = "api-${var.BRANCH_NAME}"
   compatibility_date = "2024-08-21"
 
