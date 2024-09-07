@@ -31,7 +31,7 @@ jobs:
         uses: ./.github/actions/update-infra
         with:
           DESTROY: 'true'
-          BRANCH_NAME: ${{ github.head_ref }}
+          BRANCH_NAME: ${{ inputs.branch_name || github.head_ref }}
           API_URL: ${{ vars.API_URL }}
           WEBSITE_URL: ${{ vars.WEBSITE_URL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
