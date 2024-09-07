@@ -71,7 +71,15 @@ runs:
         echo "TF_VAR_CLOUDFLARE_ZONE_ID=${{ inputs.CLOUDFLARE_ZONE_ID }}" >> $GITHUB_ENV
         echo "TF_VAR_SUPABASE_URL=${{ inputs.SUPABASE_URL }}" >> $GITHUB_ENV
         echo "TF_VAR_SUPABASE_ANON_KEY=${{ inputs.SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
-        
+    
+    - name: Set staging/prod env
+      if: ${{ inputs.ENVIRONMENT != "preview" }}
+      id: set-staging-prod-env
+      shell: bash
+      run: |
+        echo "TF_VAR_API_URL=${{ inputs.API_URL }}" >> $GITHUB_ENV
+        echo "TF_VAR_WEBSITE_URL=${{ inputs.WEBSITE_URL }}" >> $GITHUB_ENV
+
     - name: Setup Terraform
       id: setup-terraform
       uses: hashicorp/setup-terraform@v3
