@@ -73,7 +73,7 @@ runs:
         echo "TF_VAR_SUPABASE_ANON_KEY=${{ inputs.SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
     
     - name: Set staging/prod env
-      if: ${{ inputs.ENVIRONMENT != "preview" }}
+      if: ${{ inputs.ENVIRONMENT != 'preview' }}
       id: set-staging-prod-env
       shell: bash
       run: |
