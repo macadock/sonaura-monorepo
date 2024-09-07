@@ -9,7 +9,7 @@
 	"dependencies": {
 		"@repo/supabase": "*",
 		"@supabase/supabase-js": "^2.45.3",
-		"hono": "^4.5.9"
+		"hono": "^4.5.11"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20240821.1",
