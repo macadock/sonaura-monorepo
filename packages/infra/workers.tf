@@ -3,6 +3,7 @@ resource "cloudflare_workers_script" "sonaura-worker" {
   content            = file("../../apps/api/dist/index.js")
   name               = "api-${var.BRANCH_NAME}"
   compatibility_date = "2024-08-21"
+	module             = true
 
   secret_text_binding {
     name = "SUPABASE_URL"
