@@ -48,6 +48,9 @@ inputs:
   GITHUB_TOKEN:
     description: 'The GitHub token'
     required: false
+  WORKERS_SCRIPT_PATH:
+    description: 'Path to workers script'
+    required: true
 
 runs:
   using: "composite"
@@ -74,6 +77,7 @@ runs:
         echo "TF_VAR_CLOUDFLARE_ZONE_ID=${{ inputs.CLOUDFLARE_ZONE_ID }}" >> $GITHUB_ENV
         echo "TF_VAR_SUPABASE_URL=${{ inputs.SUPABASE_URL }}" >> $GITHUB_ENV
         echo "TF_VAR_SUPABASE_ANON_KEY=${{ inputs.SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+        echo "TF_VAR_WORKERS_SCRIPT_PATH=${{ inputs.WORKERS_SCRIPT_PATH }}" >> $GITHUB_ENV
     
     - name: Set staging/prod env
       if: ${{ inputs.ENVIRONMENT != 'preview' }}

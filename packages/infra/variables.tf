@@ -28,3 +28,7 @@ variable "ENVIRONMENT" {
 variable "BRANCH_NAME" {
   type = string
 }
+
+variable "WORKERS_SCRIPT_PATH" {
+  type = string
+}
