@@ -10,9 +10,9 @@ inputs:
   BRANCH_NAME:
     description: 'Terraform workspace name'
     required: true
-  API_BUILD_PATH:
+  API_SCRIPT_PATH:
     description: 'Path to api build'
-    default: 'apps/api/dist'
+    default: 'apps/api/dist/index.js'
     required: false
   PROJECT_PATH:
     description: 'Path to script'
@@ -20,9 +20,9 @@ inputs:
     required: false
 
 outputs:
-  API_BUILD_PATH:
+  API_SCRIPT_PATH:
     description: 'Path to api build'
-    value: ${{ inputs.API_BUILD_PATH }}
+    value: ${{ inputs.API_SCRIPT_PATH }}
 
 runs:
   using: "composite"

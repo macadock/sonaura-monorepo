@@ -59,7 +59,7 @@ runs:
       id: update-env-variables
       shell: bash
       run: |
-        echo "TF_VAR_WORKERS_SCRIPT_PATH=../../${{ steps.build-api.outputs.API_BUILD_PATH }}" >> $GITHUB_ENV
+        echo "TF_VAR_WORKERS_SCRIPT_PATH=../../${{ steps.build-api.outputs.API_SCRIPT_PATH }}" >> $GITHUB_ENV
 
     - name: Terraform Plan
       id: terraform-plan
