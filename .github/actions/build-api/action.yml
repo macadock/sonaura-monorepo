@@ -1,0 +1,35 @@
+name: 'Build api'
+description: 'Build api'
+inputs:
+  CLOUDFLARE_API_TOKEN:
+    description: 'Cloudflare API token'
+    required: true
+  CLOUDFLARE_ACCOUNT_ID:
+    description: 'Cloudflare account ID'
+    required: true
+  BRANCH_NAME:
+    description: 'Terraform workspace name'
+    required: true
+  API_BUILD_PATH:
+    description: 'Path to api build'
+    default: './apps/api/dist'
+    required: false
+
+outputs:
+  API_BUILD_PATH:
+    description: 'Path to api build'
+    value: ${{ inputs.API_BUILD_PATH }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      run: npm install
+      shell: bash
+
+    - name: Build api
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
+        command: deploy --name api-${{ inputs.BRANCH_NAME }} --dry-run --minify --outdir ${{ inputs.API_BUILD_PATH }}

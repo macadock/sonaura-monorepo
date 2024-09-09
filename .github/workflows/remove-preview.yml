@@ -27,20 +27,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Remove
-        uses: ./.github/actions/update-infra
+      - name: Destroy terraform
+        uses: ./.github/actions/destroy-terraform
         with:
-          DESTROY: 'true'
+          INFRA_DIR: './packages/infra'
+          BRANCH_NAME: ${{ inputs.branch_name || github.head_ref }}
+
+      - name: Set env variables
+        uses: ./.github/actions/set-env-variables
+        with:
           BRANCH_NAME: ${{ inputs.branch_name || github.head_ref }}
           API_URL: ${{ vars.API_URL }}
-          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
-          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          WORKERS_SCRIPT_PATH: 'worker.js'
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Destroy terraform
+        uses: ./.github/actions/destroy-terraform
+        with:
+          BRANCH_NAME: ${{ inputs.branch_name || github.head_ref }}

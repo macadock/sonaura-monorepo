@@ -31,4 +31,6 @@ variable "BRANCH_NAME" {
 
 variable "WORKERS_SCRIPT_PATH" {
   type = string
+  default = "worker.js"
+  nullable = true
 }

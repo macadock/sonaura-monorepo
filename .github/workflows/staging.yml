@@ -12,25 +12,36 @@ permissions:
 jobs:
   deploy-staging-apps:
     environment: staging
+    env:
+      BRANCH_NAME: ${{ github.ref_name }}
+
     name: Deploy staging apps
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy
-        uses: ./.github/actions/update-infra
+      - name: Set env variables
+        uses: ./.github/actions/set-env-variables
         with:
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
           API_URL: ${{ vars.API_URL }}
-          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
-          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          WORKERS_SCRIPT_PATH: '../../apps/api/dist/index.js'
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Deploy terraform
+        uses: ./.github/actions/deploy-terraform
+        with:
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+

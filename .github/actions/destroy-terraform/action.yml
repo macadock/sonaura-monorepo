@@ -1,0 +1,48 @@
+name: 'Destroy terraform'
+description: 'Destroy terraform'
+inputs:
+  INFRA_DIR:
+    description: 'Path to infra directory'
+    required: false
+    default: './packages/infra'
+  BRANCH_NAME:
+    description: 'Terraform workspace name'
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Terraform
+      id: setup-terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      id: terraform-init
+      run: terraform init
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
+    - name: Terraform Workspace Select
+      id: terraform-workspace-select
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+      run: terraform workspace select -or-create=false ${{ inputs.BRANCH_NAME }}
+
+    - name: Terraform Destroy
+      id: terraform-destroy
+      run: terraform destroy -auto-approve -input=false
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
+    - name: Terraform Workspace back to default
+      id: terraform-workspace-select-default
+      run: terraform workspace select default
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
+
+    - name: Terraform Workspace Delete
+      id: terraform-workspace-delete
+      run: terraform workspace delete ${{ inputs.BRANCH_NAME }}
+      shell: bash
+      working-directory: ${{ inputs.INFRA_DIR }}
