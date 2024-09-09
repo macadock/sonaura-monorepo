@@ -12,11 +12,11 @@ inputs:
     required: true
   API_BUILD_PATH:
     description: 'Path to api build'
-    default: './apps/api/dist'
+    default: 'apps/api/dist'
     required: false
   PROJECT_PATH:
     description: 'Path to script'
-    default: './apps/api'
+    default: 'apps/api'
     required: false
 
 outputs:

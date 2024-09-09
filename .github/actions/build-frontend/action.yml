@@ -19,7 +19,7 @@ inputs:
     required: true
   FRONTEND_BUILD_PATH:
     description: 'Path to frontend build'
-    default: './apps/marketing/.vercel/output/static'
+    default: 'apps/marketing/.vercel/output/static'
     required: false
 
 outputs:
