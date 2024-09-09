@@ -49,6 +49,11 @@ inputs:
     description: 'The GitHub token'
     required: false
 
+outputs:
+  NORMALIZED_BRANCH_NAME:
+    description: 'Normalized branch name'
+    value: ${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}
+
 runs:
   using: "composite"
   steps:
@@ -62,7 +67,6 @@ runs:
       id: create-environment-variables
       shell: bash
       run: |
-        echo "BRANCH_NAME=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}" >> $GITHUB_ENV
         echo "AWS_ACCESS_KEY_ID=${{ inputs.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
         echo "AWS_SECRET_ACCESS_KEY=${{ inputs.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
         echo "AWS_ENDPOINT_URL_S3=${{ inputs.AWS_ENDPOINT_URL_S3 }}" >> $GITHUB_ENV

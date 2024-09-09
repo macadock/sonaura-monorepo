@@ -14,14 +14,23 @@ jobs:
     environment: staging
     env:
       INFRA_DIR: './packages/infra'
+      API_DIR: './apps/api'
+      WEBSITE_DIR: './apps/website'
 
     name: Deploy staging apps
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        id: install-dependencies
+        run: npm install
+        shell: bash
+
       - name: Set env variables
+        id: set-env-variables
         uses: ./.github/actions/set-env-variables
         with:
           BRANCH_NAME: ${{ github.ref_name }}
@@ -51,7 +60,7 @@ jobs:
         id: terraform-workspace-select
         shell: bash
         working-directory: ${{ env.INFRA_DIR }}
-        run: terraform workspace select -or-create=true ${{ env.BRANCH_NAME }}
+        run: terraform workspace select -or-create=true ${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}
 
       - name: Terraform Format
         id: terraform-format
@@ -61,17 +70,18 @@ jobs:
 
       - name: Build api
         id: build-api
-        uses: ./.github/actions/build-api
+        uses: cloudflare/wrangler-action@v3
         with:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --name api-${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }} --dry-run --minify --outdir dist
+          workingDirectory: ${{ env.API_DIR }}
 
       - name: Update env variables
         id: update-env-variables
         shell: bash
         run: |
-          echo "TF_VAR_WORKERS_SCRIPT_PATH=./../../${{ steps.build-api.outputs.API_SCRIPT_PATH }}" >> $GITHUB_ENV
+          echo "TF_VAR_WORKERS_SCRIPT_PATH=../../${{ steps.build-api.outputs.API_SCRIPT_PATH }}" >> $GITHUB_ENV
 
       - name: Terraform Plan
         id: terraform-plan
@@ -91,6 +101,6 @@ jobs:
         with:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          BRANCH_NAME: ${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}
           WEBSITE_URL: ${{ vars.WEBSITE_URL }}
           DISABLE_DOMAIN_INDEXING: ${{ vars.ENVIRONMENT == 'production' && 'false' || 'true' }}
