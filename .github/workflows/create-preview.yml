@@ -1,11 +1,19 @@
 name: 'Deploy preview branch'
 
 on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+    tags-ignore:
+      - 'dependencies'
+
   workflow_run:
     workflows:
       - Lint
     types:
-      - in_progress
+      - completed
 
 permissions:
   contents: read
@@ -15,18 +23,27 @@ jobs:
   deploy-preview-branch:
     environment: preview
     env:
-      BRANCH_NAME: ${{ github.event.workflow_run.head_branch }}
+      INFRA_DIR: 'packages/infra'
+      WEBSITE_DIR: 'apps/marketing'
+      API_DIR: 'apps/api'
 
     name: Deploy preview branch
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        id: install-dependencies
+        run: npm install
+        shell: bash
+
       - name: Set env variables
+        id: set-env-variables
         uses: ./.github/actions/set-env-variables
         with:
-          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          BRANCH_NAME: ${{ github.head_ref || github.event.workflow_run.head_branch }}
           API_URL: ${{ vars.API_URL }}
           WEBSITE_URL: ${{ vars.WEBSITE_URL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -39,14 +56,73 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
-      - name: Deploy terraform
-        uses: ./.github/actions/deploy-terraform
+      - name: Setup Terraform
+        id: setup-terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        id: terraform-init
+        run: terraform init
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Workspace Select
+        id: terraform-workspace-select
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+        run: terraform workspace select -or-create=true ${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}
+
+      - name: Terraform Format
+        id: terraform-format
+        run: terraform fmt -check
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Build api
+        id: build-api
+        uses: cloudflare/wrangler-action@v3
         with:
-          BRANCH_NAME: ${{ env.BRANCH_NAME }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --name api-${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }} --dry-run --minify --outdir dist
+          workingDirectory: ${{ env.API_DIR }}
+
+      - name: Update env variables
+        id: update-env-variables
+        shell: bash
+        run: |
+          echo "TF_VAR_WORKERS_SCRIPT_PATH=../../${{ env.API_DIR }}/dist/index.js" >> $GITHUB_ENV
+
+      - name: Terraform Plan
+        id: terraform-plan
+        run: terraform plan -input=false
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Apply
+        id: terraform-apply
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+        run: terraform apply -auto-approve -input=false
+
+      - name: Build frontend
+        run: npm run build-ci
+        shell: bash
+
+      - name: Add custom headers
+        run: |
+          echo "${{ vars.WEBSITE_URL }}/*" >> _headers
+          echo -e "\tX-Robots-Tag: noindex" >> _headers
+        shell: bash
+        working-directory: '${{ env.WEBSITE_DIR }}/.vercel/output/static'
+
+      - name: Upload frontend build
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .vercel/output/static --project-name marketing-${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }} --branch main
+          workingDirectory: ${{ env.WEBSITE_DIR }}
 
       - name: Add links to PR comment
         uses: actions/github-script@v7
@@ -66,8 +142,8 @@ jobs:
             // 2. Prepare format of the comment
             const output = `#### Preview URL 👉
 
-            Marketing: [https://${{ env.BRANCH_NAME }}-${{ vars.WEBSITE_URL }}/](https://${{ env.BRANCH_NAME }}-${{ vars.WEBSITE_URL }}/)
-            API: [https://${{ env.BRANCH_NAME }}-${{ vars.API_URL }}/api](https://${{ env.BRANCH_NAME }}-${{ vars.API_URL }}/api)`
+            Marketing: [https://${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}-${{ vars.WEBSITE_URL }}/](https://${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}-${{ vars.WEBSITE_URL }}/)
+            API: [https://${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}-${{ vars.API_URL }}/api](https://${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}-${{ vars.API_URL }}/api)`
 
             // 3. If we have a comment, update it, otherwise create a new one
             if (botComment) {
