@@ -4,6 +4,9 @@ inputs:
   BRANCH_NAME:
     description: 'The branch name'
     required: true
+  LENGTH_LIMIT:
+    description: 'The length limit'
+    required: false
 
 outputs:
   NORMALIZED_BRANCH_NAME:
@@ -18,11 +21,13 @@ runs:
       id: normalize-branch-name
       with:
         script: |
+          const DEFAULT_LENGTH_LIMIT = 58
+          const limit = parseInt('${{ inputs.LENGTH_LIMIT }}' || DEFAULT_LENGTH_LIMIT)
           const branchName = '${{ inputs.BRANCH_NAME }}'
           // Replace '/' with '-'
           // Replace '_' with '-'
           // Replace '.' with '-'
           // Remove 'dependabot/npm_and_yarn/'
-          const normalizedBranchName = branchName.replace(/\//g, '-').replace(/_/g, '-').replace(/\./g, '-').replace('dependabot/npm_and_yarn/', '')
+          const normalizedBranchName = branchName.replace(/\//g, '-').replace(/_/g, '-').replace(/\./g, '-').slice(0, limit)
           return normalizedBranchName
         result-encoding: string
