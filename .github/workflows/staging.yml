@@ -13,7 +13,7 @@ jobs:
   deploy-staging-apps:
     environment: staging
     env:
-      BRANCH_NAME: ${{ github.ref_name }}
+      INFRA_DIR: './packages/infra'
 
     name: Deploy staging apps
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
       - name: Set env variables
         uses: ./.github/actions/set-env-variables
         with:
-          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          BRANCH_NAME: ${{ github.ref_name }}
           API_URL: ${{ vars.API_URL }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -37,12 +37,60 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-      - name: Deploy terraform
-        uses: ./.github/actions/deploy-terraform
-        with:
-          BRANCH_NAME: ${{ env.BRANCH_NAME }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+      - name: Setup Terraform
+        id: setup-terraform
+        uses: hashicorp/setup-terraform@v3
 
+      - name: Terraform Init
+        id: terraform-init
+        run: terraform init
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Workspace Select
+        id: terraform-workspace-select
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+        run: terraform workspace select -or-create=true ${{ env.BRANCH_NAME }}
+
+      - name: Terraform Format
+        id: terraform-format
+        run: terraform fmt -check
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Build api
+        id: build-api
+        uses: ./.github/actions/build-api
+        with:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+
+      - name: Update env variables
+        id: update-env-variables
+        shell: bash
+        run: |
+          echo "TF_VAR_WORKERS_SCRIPT_PATH=../../${{ steps.build-api.outputs.API_SCRIPT_PATH }}" >> $GITHUB_ENV
+
+      - name: Terraform Plan
+        id: terraform-plan
+        run: terraform plan -input=false
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Apply
+        id: terraform-apply
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+        run: terraform apply -auto-approve -input=false
+
+      - name: Deploy frontend
+        id: deploy-frontend
+        uses: ./.github/actions/build-frontend
+        with:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
+          DISABLE_DOMAIN_INDEXING: ${{ vars.ENVIRONMENT == 'production' && 'false' || 'true' }}
