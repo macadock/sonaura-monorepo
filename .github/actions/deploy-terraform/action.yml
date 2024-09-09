@@ -13,6 +13,9 @@ inputs:
   WEBSITE_URL:
     description: 'Website URL'
     required: true
+  ENVIRONMENT:
+    description: 'Environment'
+    required: true
   INFRA_DIR:
     description: 'Path to infra directory'
     required: false
@@ -78,3 +81,4 @@ runs:
         CLOUDFLARE_ACCOUNT_ID: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
         BRANCH_NAME: ${{ inputs.BRANCH_NAME }}
         WEBSITE_URL: ${{ inputs.WEBSITE_URL }}
+        DISABLE_DOMAIN_INDEXING: ${{ inputs.ENVIRONMENT == 'production' && 'false' || 'true' }}

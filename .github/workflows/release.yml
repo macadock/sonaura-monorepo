@@ -44,3 +44,4 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           WEBSITE_URL: ${{ vars.WEBSITE_URL }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
