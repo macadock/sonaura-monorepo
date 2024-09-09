@@ -14,6 +14,10 @@ inputs:
     description: 'Path to api build'
     default: './apps/api/dist'
     required: false
+  PROJECT_PATH:
+    description: 'Path to script'
+    default: './apps/api'
+    required: false
 
 outputs:
   API_BUILD_PATH:
@@ -33,3 +37,4 @@ runs:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
         command: deploy --name api-${{ inputs.BRANCH_NAME }} --dry-run --minify --outdir ${{ inputs.API_BUILD_PATH }}
+        workingDirectory: ${{ inputs.PROJECT_PATH }}
