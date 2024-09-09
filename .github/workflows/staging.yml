@@ -99,13 +99,6 @@ jobs:
         run: npm run build-ci
         shell: bash
 
-      - name: Add custom headers
-        run: |
-          echo "${{ vars.WEBSITE_URL }}/*" >> _headers
-          echo -e "\tX-Robots-Tag: noindex" >> _headers
-        shell: bash
-        working-directory: '${{ env.WEBSITE_DIR }}/.vercel/output/static'
-
       - name: Upload frontend build
         uses: cloudflare/wrangler-action@v3
         with:
