@@ -30,6 +30,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set env variables
+        id: set-env-variables
         uses: ./.github/actions/set-env-variables
         with:
           BRANCH_NAME: ${{ inputs.branch_name || github.head_ref }}
