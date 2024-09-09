@@ -20,6 +20,8 @@ permissions:
 jobs:
   remove-infra:
     environment: preview
+    env:
+      INFRA_DIR: 'packages/infra'
 
     name: Remove preview infra
     runs-on: ubuntu-latest
@@ -27,16 +29,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Destroy terraform
-        uses: ./.github/actions/destroy-terraform
-        with:
-          INFRA_DIR: './packages/infra'
-          BRANCH_NAME: ${{ inputs.branch_name || github.head_ref }}
-
       - name: Set env variables
         uses: ./.github/actions/set-env-variables
         with:
-          BRANCH_NAME: ${{ inputs.branch_name || github.head_ref }}
+          BRANCH_NAME: ${{ github.head_ref }}
           API_URL: ${{ vars.API_URL }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -49,7 +45,36 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-      - name: Destroy terraform
-        uses: ./.github/actions/destroy-terraform
-        with:
-          BRANCH_NAME: ${{ inputs.branch_name || github.head_ref }}
+      - name: Setup Terraform
+        id: setup-terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        id: terraform-init
+        run: terraform init
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Workspace Select
+        id: terraform-workspace-select
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+        run: terraform workspace select -or-create=false ${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}
+
+      - name: Terraform Destroy
+        id: terraform-destroy
+        run: terraform destroy -auto-approve -input=false
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Workspace back to default
+        id: terraform-workspace-select-default
+        run: terraform workspace select default
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Workspace Delete
+        id: terraform-workspace-delete
+        run: terraform workspace delete ${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
