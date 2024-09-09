@@ -10,9 +10,9 @@ permissions:
   contents: read
 
 jobs:
-  deploy-infra:
+  deploy-staging-apps:
     environment: staging
-    name: Deploy staging infra
+    name: Deploy staging apps
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
