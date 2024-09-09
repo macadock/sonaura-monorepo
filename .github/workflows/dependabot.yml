@@ -1,14 +1,22 @@
-name: 'Lint'
+name: 'Lint dependencies update'
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+    tags:
+      - 'dependencies'
+
 
 permissions:
   contents: read
 
 jobs:
-  lint:
+  lint-dependencies-update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
