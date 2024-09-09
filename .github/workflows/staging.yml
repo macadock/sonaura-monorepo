@@ -13,9 +13,9 @@ jobs:
   deploy-staging-apps:
     environment: staging
     env:
-      INFRA_DIR: './packages/infra'
-      API_DIR: './apps/api'
-      WEBSITE_DIR: './apps/website'
+      INFRA_DIR: 'packages/infra'
+      WEBSITE_DIR: 'apps/marketing'
+      API_DIR: 'apps/api'
 
     name: Deploy staging apps
     runs-on: ubuntu-latest
@@ -81,7 +81,7 @@ jobs:
         id: update-env-variables
         shell: bash
         run: |
-          echo "TF_VAR_WORKERS_SCRIPT_PATH=../../apps/api/dist/index.js" >> $GITHUB_ENV
+          echo "TF_VAR_WORKERS_SCRIPT_PATH=../../${{ env.API_DIR }}/dist/index.js" >> $GITHUB_ENV
 
       - name: Terraform Plan
         id: terraform-plan
@@ -104,7 +104,7 @@ jobs:
           echo "${{ vars.WEBSITE_URL }}/*" >> _headers
           echo -e "\tX-Robots-Tag: noindex" >> _headers
         shell: bash
-        working-directory: './apps/marketing/.vercel/output/static'
+        working-directory: '${{ env.WEBSITE_DIR }}/.vercel/output/static'
 
       - name: Upload frontend build
         uses: cloudflare/wrangler-action@v3
@@ -112,4 +112,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy .vercel/output/static --project-name marketing-${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }} --branch main
-          workingDirectory: './apps/marketing'
+          workingDirectory: ${{ env.WEBSITE_DIR }}
