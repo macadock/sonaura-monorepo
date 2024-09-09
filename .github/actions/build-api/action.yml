@@ -10,19 +10,9 @@ inputs:
   BRANCH_NAME:
     description: 'Terraform workspace name'
     required: true
-  API_BUILD_PATH:
-    description: 'Path to api build'
-    default: 'apps/api/dist'
-    required: false
-  PROJECT_PATH:
+  WORKING_DIRECTORY:
     description: 'Path to script'
-    default: 'apps/api'
     required: false
-
-outputs:
-  API_SCRIPT_PATH:
-    description: 'Path to api build'
-    value: '${{ inputs.API_BUILD_PATH }}/index.js'
 
 runs:
   using: "composite"
@@ -36,5 +26,5 @@ runs:
       with:
         apiToken: ${{ inputs.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ inputs.CLOUDFLARE_ACCOUNT_ID }}
-        command: deploy --name api-${{ inputs.BRANCH_NAME }} --dry-run --minify --outdir ${{ inputs.API_BUILD_PATH }}
-        workingDirectory: ${{ inputs.PROJECT_PATH }}
+        command: deploy --name api-${{ inputs.BRANCH_NAME }} --dry-run --minify --outdir dist
+        workingDirectory: ${{ inputs.WORKING_DIRECTORY }}

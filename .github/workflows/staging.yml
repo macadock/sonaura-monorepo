@@ -95,12 +95,21 @@ jobs:
         working-directory: ${{ env.INFRA_DIR }}
         run: terraform apply -auto-approve -input=false
 
-      - name: Deploy frontend
-        id: deploy-frontend
-        uses: ./.github/actions/build-frontend
+      - name: Build frontend
+        run: npm run build-ci
+        shell: bash
+
+      - name: Add custom headers
+        run: |
+          echo "${{ vars.WEBSITE_URL }}/*" >> _headers
+          echo -e "\tX-Robots-Tag: noindex" >> _headers
+        shell: bash
+        working-directory: './apps/marketing/.vercel/output/static'
+
+      - name: Upload frontend build
+        uses: cloudflare/wrangler-action@v3
         with:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          BRANCH_NAME: ${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}
-          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
-          DISABLE_DOMAIN_INDEXING: ${{ vars.ENVIRONMENT == 'production' && 'false' || 'true' }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .vercel/output/static --project-name marketing-${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }} --branch main
+          workingDirectory: './apps/marketing'

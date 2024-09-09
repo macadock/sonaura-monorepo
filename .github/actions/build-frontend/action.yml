@@ -39,7 +39,6 @@ runs:
       shell: bash
 
     - name: Add custom headers
-      if: ${{ inputs.DISABLE_DOMAIN_INDEXING == 'true' }}
       run: |
         echo "${{ inputs.WEBSITE_URL }}" >> ${{ inputs.FRONTEND_BUILD_PATH }}/_headers
         echo -e "\tX-Robots-Tag: noindex" >> ${{ inputs.FRONTEND_BUILD_PATH }}/_headers
