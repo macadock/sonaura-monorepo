@@ -1,6 +1,6 @@
 name: 'Delete staging resources'
 
-concurrency: delete-staging-resources
+concurrency: staging-resources
 
 on:
   workflow_dispatch:
