@@ -2,16 +2,8 @@ name: 'Set env variables'
 description: 'Set env variables'
 inputs:
   BRANCH_NAME:
-    description: 'Terraform workspace name'
-    required: true
-  INFRA_DIR:
-    description: 'Path to infra directory'
+    description: 'Git branch name'
     required: false
-    default: './packages/infra'
-  DESTROY:
-    description: 'Destroy infra'
-    required: false
-    default: 'false'
   API_URL:
     description: 'API URL'
     required: true
@@ -58,10 +50,18 @@ runs:
   using: "composite"
   steps:
     - name: Normalize branch name
+      if: ${{ inputs.BRANCH_NAME != '' }}
       id: normalize-branch-name
       uses: ./.github/actions/normalize-branch-name
       with:
         BRANCH_NAME: ${{ inputs.BRANCH_NAME }}
+
+    - name: Set branch name env
+      if: ${{ inputs.BRANCH_NAME == '' }}
+      id: set-branch-name-env
+      shell: bash
+      run: |
+        echo "TF_VAR_BRANCH_NAME=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}" >> $GITHUB_ENV
 
     - name: Create environment variables
       id: create-environment-variables
@@ -70,15 +70,20 @@ runs:
         echo "AWS_ACCESS_KEY_ID=${{ inputs.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
         echo "AWS_SECRET_ACCESS_KEY=${{ inputs.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
         echo "AWS_ENDPOINT_URL_S3=${{ inputs.AWS_ENDPOINT_URL_S3 }}" >> $GITHUB_ENV
-        echo "TF_VAR_BRANCH_NAME=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}" >> $GITHUB_ENV
-        echo "TF_VAR_API_URL=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}-${{ inputs.API_URL }}" >> $GITHUB_ENV
-        echo "TF_VAR_WEBSITE_URL=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}-${{ inputs.WEBSITE_URL }}" >> $GITHUB_ENV
         echo "TF_VAR_ENVIRONMENT=${{ inputs.ENVIRONMENT }}" >> $GITHUB_ENV
         echo "TF_VAR_CLOUDFLARE_API_TOKEN=${{ inputs.CLOUDFLARE_API_TOKEN }}" >> $GITHUB_ENV
         echo "TF_VAR_CLOUDFLARE_ACCOUNT_ID=${{ inputs.CLOUDFLARE_ACCOUNT_ID }}" >> $GITHUB_ENV
         echo "TF_VAR_CLOUDFLARE_ZONE_ID=${{ inputs.CLOUDFLARE_ZONE_ID }}" >> $GITHUB_ENV
         echo "TF_VAR_SUPABASE_URL=${{ inputs.SUPABASE_URL }}" >> $GITHUB_ENV
         echo "TF_VAR_SUPABASE_ANON_KEY=${{ inputs.SUPABASE_ANON_KEY }}" >> $GITHUB_ENV
+
+    - name: Set preview env
+      if: ${{ inputs.ENVIRONMENT == 'preview' }}
+      id: set-preview-env
+      shell: bash
+      run: |
+        echo "TF_VAR_API_URL=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}-${{ inputs.API_URL }}" >> $GITHUB_ENV
+        echo "TF_VAR_WEBSITE_URL=${{ steps.normalize-branch-name.outputs.NORMALIZED_BRANCH_NAME }}-${{ inputs.WEBSITE_URL }}" >> $GITHUB_ENV
 
     - name: Set staging/prod env
       if: ${{ inputs.ENVIRONMENT != 'preview' }}
