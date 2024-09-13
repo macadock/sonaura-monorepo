@@ -1,6 +1,6 @@
-name: 'Deploy staging environment'
+name: 'Deploy staging resources'
 
-concurrency: staging
+concurrency: staging-resources
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
         id: set-env-variables
         uses: ./.github/actions/set-env-variables
         with:
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: 'main'
           API_URL: ${{ vars.API_URL }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -60,7 +60,7 @@ jobs:
         id: terraform-workspace-select
         shell: bash
         working-directory: ${{ env.INFRA_DIR }}
-        run: terraform workspace select -or-create=true ${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}
+        run: terraform workspace select -or-create=true main
 
       - name: Terraform Format
         id: terraform-format

@@ -1,0 +1,72 @@
+name: 'Delete staging resources'
+
+concurrency: delete-staging-resources
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-staging-apps:
+    environment: staging
+    env:
+      INFRA_DIR: 'packages/infra/staging'
+      WEBSITE_DIR: 'apps/marketing'
+      API_DIR: 'apps/api'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set env variables
+        id: set-env-variables
+        uses: ./.github/actions/set-env-variables
+        with:
+          BRANCH_NAME: 'main'
+          API_URL: ${{ vars.API_URL }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Setup Terraform
+        id: setup-terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        id: terraform-init
+        run: terraform init
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Workspace Select
+        id: terraform-workspace-select
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+        run: terraform workspace select -or-create=false main
+
+      - name: Terraform Destroy
+        id: terraform-destroy
+        run: terraform destroy -auto-approve -input=false
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Workspace back to default
+        id: terraform-workspace-select-default
+        run: terraform workspace select default
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
+
+      - name: Terraform Workspace Delete
+        id: terraform-workspace-delete
+        run: terraform workspace delete main
+        shell: bash
+        working-directory: ${{ env.INFRA_DIR }}
