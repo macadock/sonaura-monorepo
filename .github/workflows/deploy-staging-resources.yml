@@ -24,11 +24,6 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        id: install-dependencies
-        run: npm install
-        shell: bash
-
       - name: Set env variables
         id: set-env-variables
         uses: ./.github/actions/set-env-variables
