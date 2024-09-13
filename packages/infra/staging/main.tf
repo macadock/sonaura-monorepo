@@ -27,7 +27,6 @@ resource "cloudflare_workers_script" "sonaura-worker" {
   content            = file(var.WORKERS_SCRIPT_PATH)
   name               = "api-staging"
   compatibility_date = "2024-08-21"
-  module             = true
 
   secret_text_binding {
     name = "SUPABASE_URL"
