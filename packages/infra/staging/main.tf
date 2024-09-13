@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket                      = "sonaura-terraform-state"
+    bucket                      = "sonaura-staging-env"
     key                         = "staging"
     region                      = "auto"
     skip_credentials_validation = true
