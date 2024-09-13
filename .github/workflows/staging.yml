@@ -13,7 +13,7 @@ jobs:
   deploy-staging-apps:
     environment: staging
     env:
-      INFRA_DIR: 'packages/infra'
+      INFRA_DIR: 'packages/infra/staging'
       WEBSITE_DIR: 'apps/marketing'
       API_DIR: 'apps/api'
 
@@ -68,21 +68,6 @@ jobs:
         shell: bash
         working-directory: ${{ env.INFRA_DIR }}
 
-      - name: Build api
-        id: build-api
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --name api-${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }} --dry-run --minify --outdir dist
-          workingDirectory: ${{ env.API_DIR }}
-
-      - name: Update env variables
-        id: update-env-variables
-        shell: bash
-        run: |
-          echo "TF_VAR_WORKERS_SCRIPT_PATH=../../${{ env.API_DIR }}/dist/index.js" >> $GITHUB_ENV
-
       - name: Terraform Plan
         id: terraform-plan
         run: terraform plan -input=false
@@ -94,15 +79,3 @@ jobs:
         shell: bash
         working-directory: ${{ env.INFRA_DIR }}
         run: terraform apply -auto-approve -input=false
-
-      - name: Build frontend
-        run: npm run build-ci
-        shell: bash
-
-      - name: Upload frontend build
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .vercel/output/static --project-name marketing-${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }} --branch main
-          workingDirectory: ${{ env.WEBSITE_DIR }}

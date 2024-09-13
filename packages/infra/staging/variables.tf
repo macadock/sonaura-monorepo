@@ -25,11 +25,16 @@ variable "ENVIRONMENT" {
   type = string
 }
 
-variable "BRANCH_NAME" {
-  type = string
-}
-
 variable "WORKERS_SCRIPT_PATH" {
   type    = string
   default = "worker.js"
+}
+
+variable "SUPABASE_URL" {
+  type = string
+}
+
+variable "SUPABASE_ANON_KEY" {
+  sensitive = true
+  type      = string
 }
