@@ -13,7 +13,7 @@ jobs:
   deploy-production-apps:
     environment: production
     env:
-      INFRA_DIR: 'packages/infra'
+      INFRA_DIR: 'packages/infra/production'
       WEBSITE_DIR: 'apps/marketing'
       API_DIR: 'apps/api'
 
@@ -54,28 +54,13 @@ jobs:
         id: terraform-workspace-select
         shell: bash
         working-directory: ${{ env.INFRA_DIR }}
-        run: terraform workspace select -or-create=true ${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }}
+        run: terraform workspace select -or-create=true production
 
       - name: Terraform Format
         id: terraform-format
         run: terraform fmt -check
         shell: bash
         working-directory: ${{ env.INFRA_DIR }}
-
-      - name: Build api
-        id: build-api
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --name api-${{ steps.set-env-variables.outputs.NORMALIZED_BRANCH_NAME }} --dry-run --minify --outdir dist
-          workingDirectory: ${{ env.API_DIR }}
-
-      - name: Update env variables
-        id: update-env-variables
-        shell: bash
-        run: |
-          echo "TF_VAR_WORKERS_SCRIPT_PATH=../../${{ env.API_DIR }}/dist/index.js" >> $GITHUB_ENV
 
       - name: Terraform Plan
         id: terraform-plan
@@ -88,7 +73,3 @@ jobs:
         shell: bash
         working-directory: ${{ env.INFRA_DIR }}
         run: terraform apply -auto-approve -input=false
-
-      - name: Build frontend
-        run: npm run build-ci
-        shell: bash
