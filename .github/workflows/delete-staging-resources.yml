@@ -16,6 +16,9 @@ jobs:
       WEBSITE_DIR: 'apps/marketing'
       API_DIR: 'apps/api'
 
+    name: Delete staging resources
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
