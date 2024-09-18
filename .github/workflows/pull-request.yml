@@ -8,9 +8,6 @@ on:
       - opened
       - synchronize
       - reopened
-    tags-ignore:
-      - 'dependencies'
-
 
 permissions:
   contents: read

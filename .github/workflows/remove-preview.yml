@@ -4,8 +4,6 @@ on:
   pull_request:
     types: [closed]
     branches: [ "main" ]
-    tags:
-      - preview
   workflow_dispatch:
     inputs:
       branch_name:

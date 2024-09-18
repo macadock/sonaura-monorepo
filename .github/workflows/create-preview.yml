@@ -1,21 +1,7 @@
 name: 'Deploy preview branch'
 
 on:
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
-      - reopened
-    tags-ignore:
-      - 'dependencies'
-
-  workflow_run:
-    workflows:
-      - Lint dependencies update
-    types:
-      - completed
+  workflow_dispatch:
 
 permissions:
   contents: read
