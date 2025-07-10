@@ -16,31 +16,31 @@
   "dependencies": {
     "@sonaura/database": "workspace:*",
     "@sonaura/ui": "workspace:*",
-    "@hookform/resolvers": "5.0.1",
-    "@next/third-parties": "15.3.3",
-    "@sentry/nextjs": "9.24.0",
-    "@tanstack/react-query": "5.79.0",
+    "@hookform/resolvers": "5.1.1",
+    "@next/third-parties": "15.3.5",
+    "@sentry/nextjs": "9.36.0",
+    "@tanstack/react-query": "5.82.0",
     "clsx": "2.1.1",
-    "google-libphonenumber": "3.2.41",
-    "lucide-react": "0.511.0",
-    "next": "15.3.3",
+    "google-libphonenumber": "3.2.42",
+    "lucide-react": "0.525.0",
+    "next": "15.3.5",
     "next-themes": "0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-hook-form": "7.57.0",
+    "react-hook-form": "7.60.0",
     "react-use-cart": "1.14.0",
     "zod": "3.25.48",
     "@openauthjs/openauth": "0.4.3",
-    "@opennextjs/cloudflare": "1.1.0"
+    "@opennextjs/cloudflare": "1.4.0"
   },
   "devDependencies": {
     "@sonaura/eslint-config": "workspace:^",
     "@sonaura/typescript-config": "workspace:*",
     "@types/google-libphonenumber": "7.4.30",
     "@types/node": "22.14.1",
-    "@types/react": "19.1.6",
-    "@types/react-dom": "19.1.5",
-    "wrangler": "4.18.0",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "wrangler": "4.24.1",
     "@opennextjs/aws": "^3.5.8"
   }
 }
