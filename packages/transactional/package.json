@@ -4,14 +4,14 @@
     "dev": "email dev -p 3004"
   },
   "dependencies": {
-    "react-email": "4.0.15",
-    "@react-email/components": "0.0.41",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-email": "4.2.8",
+    "@react-email/components": "0.5.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
   },
   "devDependencies": {
     "@sonaura/typescript-config": "workspace:*",
-    "@types/react": "19.1.6",
-    "@types/react-dom": "19.1.5"
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.7"
   }
 }
