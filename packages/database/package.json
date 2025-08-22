@@ -8,21 +8,21 @@
     "db:migrate": "tsx ./src/migrate.ts"
   },
   "dependencies": {
-    "@supabase/ssr": "0.6.1",
-    "@supabase/supabase-js": "2.49.9",
+    "@supabase/ssr": "0.7.0",
+    "@supabase/supabase-js": "2.56.0",
     "type-fest": "4.41.0",
-    "drizzle-orm": "0.44.1",
+    "drizzle-orm": "0.44.4",
     "dotenv": "16.5.0",
-    "@neondatabase/serverless": "1.0.0"
+    "@neondatabase/serverless": "1.0.1"
   },
   "devDependencies": {
     "@sonaura/eslint-config": "workspace:*",
     "@sonaura/typescript-config": "workspace:*",
     "@types/node": "22.14.1",
-    "eslint": "9.28.0",
-    "drizzle-kit": "0.31.1",
-    "tsx": "4.19.4",
-    "next": "15.3.3"
+    "eslint": "9.33.0",
+    "drizzle-kit": "0.31.4",
+    "tsx": "4.20.4",
+    "next": "15.5.0"
   },
   "peerDependencies": {
     "next": ">=13.4.0"
